@@ -16,7 +16,9 @@ class _BaseScreenState extends State<BaseScreen> {
     super.initState();
   }
 
-  int _selectedIndex = 2;
+  // Default selected index is Home (0)
+  int _selectedIndex = 0;
+  
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -27,18 +29,21 @@ class _BaseScreenState extends State<BaseScreen> {
   Widget build(BuildContext context){
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar:AppBar(
+      appBar: AppBar(
         elevation: 0,
-        title:const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "N S S",
-                          style:
-                          TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),centerTitle: true,
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "R N T",
+              style: TextStyle(
+                color: Colors.deepPurple, 
+                fontWeight: FontWeight.w600
+              ),
+            ),
+          ],
+        ),
+        centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         actions: [
           IconButton(
@@ -52,27 +57,23 @@ class _BaseScreenState extends State<BaseScreen> {
 
       body: IndexedStack(
         index: _selectedIndex,
-        children: <Widget>[
-            // Events Page
-            Center(child: Text("Events Page")),
-            
-            // Merch Page
-            Center(child: Text("Merch Page")),
-            
-            // Dashboard Page
-            Center(child: Text("Dashboard Page")),
-            
-            // Profile Page
-            Center(child: Text("Profile Page")),
-            
-            // More Options Page
-            Center(child: Text("More Options")),
+        children: const <Widget>[
+          // Home Page
+          Center(child: Text("Home Page")),
+          
+          // Quests Page
+          Center(child: Text("Quests Page")),
+          
+          // Community Page
+          Center(child: Text("Community Page")),
+          
+          // Profile Page
+          Center(child: Text("Profile Page")),
         ],
       ),
       
       //Bottom Navigation Bar:
       bottomNavigationBar: BottomNavigationBar(
-        //decoration of the bar
         type: BottomNavigationBarType.shifting,
         selectedIconTheme: const IconThemeData(color: Colors.deepPurple),
         iconSize: 34,
@@ -84,37 +85,38 @@ class _BaseScreenState extends State<BaseScreen> {
         ),
         backgroundColor: Colors.deepPurple,
         elevation: 0, 
-        //to do with the different pages in the bar
-    items: const <BottomNavigationBarItem>[
-
-      BottomNavigationBarItem(
-        icon: Icon(Icons.event_outlined),
-        label: "Events",
+        items: const <BottomNavigationBarItem>[
+          // Home
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: "Home",
+          ),
+          
+          // Quests
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assignment_outlined),
+            activeIcon: Icon(Icons.assignment),
+            label: "Quests",
+          ),
+          
+          // Community
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people_outline),
+            activeIcon: Icon(Icons.people),
+            label: 'Community',
+          ),
+          
+          // Profile
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline_outlined),
+            activeIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.shopping_bag_outlined),
-        label: "Merch",
-      ),
-      
-      BottomNavigationBarItem(
-        icon: Icon(Icons.space_dashboard_outlined),
-        label: 'Dashboard',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person_outline_outlined),
-        label: 'Profile',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.more_horiz_outlined),
-        label: 'More',
-      ),
-    ],
-    currentIndex: _selectedIndex, //New
-    onTap: _onItemTapped,
-  ),
-  
-
-      
     );
   }
 }
