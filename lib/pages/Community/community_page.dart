@@ -10,22 +10,27 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  final List<CommunityPost> _posts = [
+  // Replace the _posts list in the _CommunityPageState class
+
+final List<CommunityPost> _posts = [
     CommunityPost(
       id: '1',
-      username: 'MindfulUser42',
+      username: 'DuckMyHeader42',
       content: 'Just completed a 7-day mindfulness streak. Feeling much more centered and focused!',
       timeAgo: '2h ago',
       likesCount: 15,
+      downvotesCount: 1,
       commentsCount: 3,
     ),
     CommunityPost(
       id: '2',
       username: 'CalmMind88',
-      content: 'Does anyone have suggestions for dealing with exam anxiety? I have finals coming up next week and feeling overwhelmed.',
+      content: 'Completed my Quests for the Week - planter project using repurposed plastic bottles. Small steps toward sustainability!',
       timeAgo: '5h ago',
-      likesCount: 8,
+      likesCount: 24,
+      downvotesCount: 2,
       commentsCount: 12,
+      imageUrl: 'assets/images/repurposed_plastic.png',
     ),
     CommunityPost(
       id: '3',
@@ -33,6 +38,7 @@ class _CommunityPageState extends State<CommunityPage> {
       content: 'I found this amazing resource for free guided meditations. Highly recommend for anyone looking to start meditation: https://example.com/meditations',
       timeAgo: '1d ago',
       likesCount: 42,
+      downvotesCount: 3,
       commentsCount: 7,
     ),
     CommunityPost(
@@ -41,6 +47,7 @@ class _CommunityPageState extends State<CommunityPage> {
       content: 'Reminder: It\'s okay to take breaks. Sometimes the most productive thing you can do is rest.',
       timeAgo: '2d ago',
       likesCount: 105,
+      downvotesCount: 8,
       commentsCount: 15,
     ),
     CommunityPost(
@@ -49,6 +56,7 @@ class _CommunityPageState extends State<CommunityPage> {
       content: 'Just had a great therapy session today. If you\'ve been thinking about trying therapy, this is your sign to give it a shot!',
       timeAgo: '3d ago',
       likesCount: 27,
+      downvotesCount: 2,
       commentsCount: 6,
     ),
   ];
@@ -134,7 +142,7 @@ class _CommunityPageState extends State<CommunityPage> {
               const SizedBox(height: 20),
               
               // Community posts
-              ..._posts.map((post) => _buildPostCard(post)).toList(),
+              ..._posts.map((post) => _buildPostCard(post)),
               
               // Bottom padding to make room for the floating button
               const SizedBox(height: 80),
@@ -168,102 +176,138 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   Widget _buildPostCard(CommunityPost post) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Post header
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.deepPurple.withOpacity(0.2),
-                  child: Text(
-                    post.username.substring(0, 1).toUpperCase(),
+  return Card(
+    margin: const EdgeInsets.only(bottom: 16),
+    elevation: 1,
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Post header
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.deepPurple.withOpacity(0.2),
+                child: Text(
+                  post.username.substring(0, 1).toUpperCase(),
+                  style: const TextStyle(
+                    color: Colors.deepPurple,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    post.username,
                     style: const TextStyle(
-                      color: Colors.deepPurple,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      post.username,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Text(
+                    post.timeAgo,
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
                     ),
-                    Text(
-                      post.timeAgo,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Post content
+          Text(post.content),
+          
+          // Post image (if available)
+          if (post.imageUrl != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  post.imageUrl!,
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.cover,
                 ),
-              ],
+              ),
             ),
-            
-            const SizedBox(height: 12),
-            
-            // Post content
-            Text(post.content),
-            
-            const SizedBox(height: 12),
-            
-            // Post actions
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.favorite_border),
-                      color: Colors.red,
-                      constraints: const BoxConstraints(),
-                      padding: EdgeInsets.zero,
-                      iconSize: 20,
-                    ),
-                    const SizedBox(width: 4),
-                    Text('${post.likesCount}'),
-                  ],
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.comment_outlined),
-                      color: Colors.blue,
-                      constraints: const BoxConstraints(),
-                      padding: EdgeInsets.zero,
-                      iconSize: 20,
-                    ),
-                    const SizedBox(width: 4),
-                    Text('${post.commentsCount}'),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.share_outlined),
-                  constraints: const BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                  iconSize: 20,
-                ),
-              ],
-            ),
-          ],
-        ),
+          
+          const SizedBox(height: 12),
+          
+          // Post actions
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Likes
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.thumb_up_outlined),
+                    color: Colors.green,
+                    constraints: const BoxConstraints(),
+                    padding: EdgeInsets.zero,
+                    iconSize: 20,
+                  ),
+                  const SizedBox(width: 4),
+                  Text('${post.likesCount}'),
+                ],
+              ),
+              
+              // Downvotes
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.thumb_down_outlined),
+                    color: Colors.red,
+                    constraints: const BoxConstraints(),
+                    padding: EdgeInsets.zero,
+                    iconSize: 20,
+                  ),
+                  const SizedBox(width: 4),
+                  Text('${post.downvotesCount}'),
+                ],
+              ),
+              
+              // Comments
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.comment_outlined),
+                    color: Colors.blue,
+                    constraints: const BoxConstraints(),
+                    padding: EdgeInsets.zero,
+                    iconSize: 20,
+                  ),
+                  const SizedBox(width: 4),
+                  Text('${post.commentsCount}'),
+                ],
+              ),
+              
+              // Share
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.share_outlined),
+                constraints: const BoxConstraints(),
+                padding: EdgeInsets.zero,
+                iconSize: 20,
+              ),
+            ],
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class CommunityPost {
@@ -272,7 +316,9 @@ class CommunityPost {
   final String content;
   final String timeAgo;
   final int likesCount;
+  final int downvotesCount;  // Added downvotes count
   final int commentsCount;
+  final String? imageUrl;    // Optional image URL for posts with images
 
   CommunityPost({
     required this.id,
@@ -281,5 +327,7 @@ class CommunityPost {
     required this.timeAgo,
     required this.likesCount,
     required this.commentsCount,
+    this.downvotesCount = 0,  // Default value
+    this.imageUrl,            // Optional parameter
   });
 }
