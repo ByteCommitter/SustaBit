@@ -33,7 +33,7 @@ class SALibraryPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Our team acts as a human library, helping with mental health by listening and providing support to everyone on campus.',
+                  'Our peers act as a human library, helping with mental health by listening and providing support to everyone on campus.',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black87,
@@ -42,7 +42,7 @@ class SALibraryPage extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Click on a book to connect with a team member',
+                  'Click on a book to connect with a peer supporter',
                   style: TextStyle(
                     fontSize: 14,
                     fontStyle: FontStyle.italic,
@@ -57,24 +57,26 @@ class SALibraryPage extends StatelessWidget {
           // Bookshelf
           Expanded(
             child: Container(
+              padding: EdgeInsets.all(30),
               decoration: BoxDecoration(
+              
                 image: DecorationImage(
                   image: AssetImage('assets/images/wooden_shelf.png'),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.brown.withOpacity(0.7),
-                    BlendMode.color,
-                  ),
+                  fit: BoxFit.cover
+                  //colorFilter: ColorFilter.mode(
+                  //   Colors.brown.withOpacity(0.7),
+                  //   BlendMode.color,
+                  // ),
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0), // Increased padding
+                padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 30.0), // Increased padding to center books more
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    childAspectRatio: 0.58, // Adjusted for thinner books
-                    crossAxisSpacing: 20, // Increased spacing between books
-                    mainAxisSpacing: 10, // Increased vertical spacing
+                    childAspectRatio: 0.7, // Adjusted aspect ratio for smaller books
+                    crossAxisSpacing: 30, // Increased spacing between books horizontally
+                    mainAxisSpacing: 40, // Increased vertical spacing 
                   ),
                   itemCount: _saTeamMembers.length,
                   itemBuilder: (context, index) {
@@ -97,12 +99,16 @@ class SALibraryPage extends StatelessWidget {
         Get.to(() => SAChatPage(teamMember: member));
       },
       child: Container(
+        // REDUCED HEIGHT AND WIDTH: Made container size even smaller
+        height: 50, // Further reduced from 40 to 30
+        width: 20,  // Keeping width the same
+        
         decoration: BoxDecoration(
           color: member.bookColor,
-          borderRadius: BorderRadius.circular(2), // Even smaller corner radius
+          borderRadius: BorderRadius.circular(2),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withOpacity(0.2), // Lighter shadow
               blurRadius: 2,
               offset: const Offset(1, 1),
             ),
@@ -111,42 +117,31 @@ class SALibraryPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Book spine - even thinner
-            Container(
-              height: 50, // Shorter spine
-              width: 6, // Thinner spine
-              color: member.bookColor.withOpacity(0.7),
-              margin: const EdgeInsets.only(left: 1), // Smaller margin
-            ),
-            
-            // Book title (rotated)
+            // Book title (horizontal)
             Expanded(
               child: Center(
-                child: RotatedBox(
-                  quarterTurns: 1, // Rotate 90 degrees
-                  child: Text(
-                    member.name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12, // Smaller font
-                    ),
-                    textAlign: TextAlign.center,
+                child: Text(
+                  member.name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12, // Slightly smaller font
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
             
-            // Book subject - thinner
+            // Book subject - smaller
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2), // Smaller padding
+              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1), // Even smaller padding
               alignment: Alignment.center,
               color: Colors.black26,
               child: Text(
                 member.specialty,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 7, // Even smaller font
+                  fontSize: 6, // Even smaller font
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -179,112 +174,112 @@ class SATeamMember {
   });
 }
 
-// Hardcoded SA team members
+// Updated SA team members with 5-letter names
 final List<SATeamMember> _saTeamMembers = [
   SATeamMember(
     id: 'sa1',
-    name: 'Dr. Emma Wilson',
+    name: 'Alisa', // 5-letter name
     specialty: 'Anxiety & Stress',
-    bio: 'Clinical psychologist with 10 years of experience helping students manage anxiety and stress.',
+    bio: 'Peer supporter with experience helping fellow students manage anxiety and stress.',
     bookColor: Colors.deepPurple,
     presetMessages: [
-      "Hi there! I'm Dr. Emma. How can I support you today?",
+      "Hi there! I'm Alisa. How can I support you today?",
       "Remember that feeling anxious is a normal response to stress. Let's talk about it.",
       "Would you like to learn some breathing techniques that can help in moments of stress?",
     ],
   ),
   SATeamMember(
     id: 'sa2',
-    name: 'Michael Chen',
+    name: 'Rohan', // 5-letter name
     specialty: 'Peer Support',
-    bio: 'Graduate student and trained peer counselor who has personal experience with overcoming depression.',
+    bio: 'Student who has personal experience with overcoming depression and wants to help others.',
     bookColor: Colors.teal,
     presetMessages: [
-      "Hey! I'm Michael. I'm here to listen without judgment.",
+      "Hey! I'm Rohan. I'm here to listen without judgment.",
       "As someone who's been through similar struggles, I understand how overwhelming things can get.",
       "Would you like to share what's been on your mind lately?",
     ],
   ),
   SATeamMember(
     id: 'sa3',
-    name: 'Sophia Rodriguez',
+    name: 'Misha', // 5-letter name
     specialty: 'Academic Pressure',
-    bio: 'Education counselor specializing in helping students navigate academic stress and expectations.',
+    bio: 'Student mentor specializing in helping peers navigate academic stress and expectations.',
     bookColor: Colors.indigo,
     presetMessages: [
-      "Hi, I'm Sophia. Feeling overwhelmed with coursework?",
+      "Hi, I'm Misha. Feeling overwhelmed with coursework?",
       "Let's discuss some strategies to balance your academic responsibilities.",
       "Remember that your worth isn't determined by your grades or achievements.",
     ],
   ),
   SATeamMember(
     id: 'sa4',
-    name: 'James Thompson',
+    name: 'Jorge', // 5-letter name
     specialty: 'Grief & Loss',
-    bio: 'Licensed therapist with expertise in helping individuals process grief and navigate significant life changes.',
+    bio: 'Peer supporter trained to help individuals process grief and navigate significant life changes.',
     bookColor: Colors.amber.shade800,
     presetMessages: [
-      "Hello, I'm James. I create a safe space for discussing difficult emotions.",
+      "Hello, I'm Jorge. I create a safe space for discussing difficult emotions.",
       "Grief can come in many forms. How has your experience been?",
       "It's okay to not be okay. I'm here to support you through this process.",
     ],
   ),
   SATeamMember(
     id: 'sa5',
-    name: 'Aisha Patel',
+    name: 'Neela', // 5-letter name
     specialty: 'Cultural Adaptation',
-    bio: 'International student advisor who helps students navigate cultural transitions and identity challenges.',
+    bio: 'International student who helps peers navigate cultural transitions and identity challenges.',
     bookColor: Colors.pink.shade700,
     presetMessages: [
-      "Hi, I'm Aisha. Adjusting to a new environment can be challenging.",
+      "Hi, I'm Neela. Adjusting to a new environment can be challenging.",
       "I'd love to hear about your experiences and how you've been coping.",
       "What aspects of the transition have been most difficult for you?",
     ],
   ),
   SATeamMember(
     id: 'sa6',
-    name: 'David Nguyen',
+    name: 'Danny', // 5-letter name
     specialty: 'LGBTQ+ Support',
-    bio: 'Counselor and advocate for LGBTQ+ students, focusing on identity, acceptance, and community building.',
+    bio: 'Student advocate for LGBTQ+ peers, focusing on identity, acceptance, and community building.',
     bookColor: Colors.blue.shade800,
     presetMessages: [
-      "Hello! I'm David. This is a judgment-free zone where you can be yourself.",
+      "Hello! I'm Danny. This is a judgment-free zone where you can be yourself.",
       "How have you been feeling about your identity and place in the community?",
       "Would you like to discuss resources or support groups available on campus?",
     ],
   ),
   SATeamMember(
     id: 'sa7',
-    name: 'Maya Johnson',
+    name: 'Layla', // 5-letter name
     specialty: 'Relationship Issues',
-    bio: 'Counselor specializing in interpersonal relationships, communication skills, and boundary setting.',
+    bio: 'Peer supporter trained in interpersonal relationships, communication skills, and boundary setting.',
     bookColor: Colors.red.shade700,
     presetMessages: [
-      "Hi, I'm Maya. Navigating relationships can be complex.",
+      "Hi, I'm Layla. Navigating relationships can be complex.",
       "How have your connections with others been affecting your well-being?",
       "Let's talk about healthy boundaries and communication strategies.",
     ],
   ),
   SATeamMember(
     id: 'sa8',
-    name: 'Alex Kim',
+    name: 'Kevin', // 5-letter name
     specialty: 'Substance Use',
-    bio: 'Recovery coach who provides non-judgmental support for students dealing with substance use concerns.',
+    bio: 'Student who provides non-judgmental support for peers dealing with substance use concerns.',
     bookColor: Colors.green.shade800,
     presetMessages: [
-      "Hey there, I'm Alex. I'm here to listen and support, not to judge.",
+      "Hey there, I'm Kevin. I'm here to listen and support, not to judge.",
       "Would you like to talk about how substance use has been impacting your life?",
       "There are many paths to wellness. Let's explore what might work for you.",
     ],
   ),
   SATeamMember(
     id: 'sa9',
-    name: 'Olivia Martinez',
+    name: 'Sonia', // 5-letter name
     specialty: 'Self-Esteem',
-    bio: 'Positive psychology practitioner focused on building self-worth, resilience, and personal strengths.',
+    bio: 'Peer mentor focused on building self-worth, resilience, and personal strengths.',
     bookColor: Colors.purple.shade800,
     presetMessages: [
-      "Hello! I'm Olivia. I believe in your inherent worth and potential.",
+      "Hello! I'm Sonia. I believe in your inherent worth and potential.",
       "How has your relationship with yourself been lately?",
       "Let's explore the unique strengths you possess that you might not fully recognize yet.",
     ],

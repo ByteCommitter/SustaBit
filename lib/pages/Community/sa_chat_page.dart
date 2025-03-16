@@ -133,13 +133,13 @@ class _SAChatPageState extends State<SAChatPage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Book icon - made thinner
+                // Book icon - made even smaller
                 Container(
-                  height: 60,
-                  width: 30, // Reduced from 40 to 30
+                  height: 50, // Reduced from 60 to 50
+                  width: 25, // Reduced from 30 to 25
                   decoration: BoxDecoration(
                     color: widget.teamMember.bookColor,
-                    borderRadius: BorderRadius.circular(3), // Matching the library books
+                    borderRadius: BorderRadius.circular(2),
                   ),
                   margin: const EdgeInsets.only(right: 16),
                 ),
