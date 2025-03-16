@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'Profile/profile_page.dart';
 import 'Community/community_page.dart';
+import 'Quests/quest_page.dart';
 
 class BaseScreen extends StatefulWidget{
   const BaseScreen({super.key});
@@ -64,7 +65,7 @@ class _BaseScreenState extends State<BaseScreen> {
           const Center(child: Text("Home Page")),
           
           // Quests Page
-          const Center(child: Text("Quests Page")),
+          const QuestPage(),
           
           // Community Page
           const CommunityPage(),
