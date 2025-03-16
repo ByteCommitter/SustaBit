@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import 'Profile/profile_page.dart';
+import 'Community/community_page.dart';
 
 class BaseScreen extends StatefulWidget{
   const BaseScreen({super.key});
@@ -45,30 +47,30 @@ class _BaseScreenState extends State<BaseScreen> {
         ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.deepPurple),
-            onPressed: () async {
-              await _authService.signOut();
-            },
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.logout, color: Colors.deepPurple),
+        //     onPressed: () async {
+        //       await _authService.signOut();
+        //     },
+        //   )
+        // ],
       ),
 
       body: IndexedStack(
         index: _selectedIndex,
-        children: const <Widget>[
+        children: <Widget>[
           // Home Page
-          Center(child: Text("Home Page")),
+          const Center(child: Text("Home Page")),
           
           // Quests Page
-          Center(child: Text("Quests Page")),
+          const Center(child: Text("Quests Page")),
           
           // Community Page
-          Center(child: Text("Community Page")),
+          const CommunityPage(),
           
           // Profile Page
-          Center(child: Text("Profile Page")),
+          const ProfilePage(),
         ],
       ),
       
