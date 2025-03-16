@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/pages/Community/community_page.dart';
 
 class QuestPage extends StatefulWidget {
   const QuestPage({super.key});
@@ -81,13 +82,16 @@ class _QuestPageState extends State<QuestPage> {
       });
       _questController.clear();
       
-      // Show success message
+      // Show success message with solid background for better visibility
       Get.snackbar(
         'Quest Added',
         'Your quest has been added successfully!',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.1),
-        colorText: Colors.green,
+        backgroundColor: Colors.green[100], // Solid light green background
+        colorText: Colors.green[800], // Dark green text for contrast
+        margin: const EdgeInsets.all(16),
+        borderRadius: 8,
+        duration: const Duration(seconds: 3),
       );
     }
   }
@@ -111,13 +115,16 @@ class _QuestPageState extends State<QuestPage> {
       );
     });
     
-    // Show success message
+    // Show success message with solid background
     Get.snackbar(
       'Quest Added',
       'The suggested quest has been added to your active quests!',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green.withOpacity(0.1),
-      colorText: Colors.green,
+      backgroundColor: Colors.green[100], // Solid light green background
+      colorText: Colors.green[800], // Dark green text for contrast
+      margin: const EdgeInsets.all(16),
+      borderRadius: 8,
+      duration: const Duration(seconds: 3),
     );
   }
   
@@ -127,13 +134,16 @@ class _QuestPageState extends State<QuestPage> {
       _activeQuests.removeWhere((quest) => quest.id == id);
     });
     
-    // Show success message
+    // Show success message with solid background
     Get.snackbar(
       'Quest Deleted',
       'Quest has been removed from your list',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.red.withOpacity(0.1),
-      colorText: Colors.red,
+      backgroundColor: Colors.red[100], // Solid light red background
+      colorText: Colors.red[800], // Dark red text for contrast
+      margin: const EdgeInsets.all(16),
+      borderRadius: 8,
+      duration: const Duration(seconds: 3),
     );
   }
   
@@ -143,17 +153,28 @@ class _QuestPageState extends State<QuestPage> {
       final questIndex = _activeQuests.indexWhere((quest) => quest.id == id);
       if (questIndex != -1) {
         _activeQuests[questIndex] = _activeQuests[questIndex].copyWith(isCompleted: true);
+        
+        // Get the completed quest
+        final completedQuest = _activeQuests[questIndex];
+        
+        // Updated success message with solid background
+        Get.snackbar(
+          'Quest Completed',
+          'Congratulations! Share with the community to get points when others verify your achievement.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.blue[100], // Solid light blue background
+          colorText: Colors.blue[800], // Dark blue text for contrast
+          margin: const EdgeInsets.all(16),
+          borderRadius: 8,
+          duration: const Duration(seconds: 3),
+        );
+        
+        // Navigate to community page to share accomplishment
+        Get.to(() => CommunityPage(
+          prefilledPost: "I just completed the quest: ${completedQuest.title}! Share your thoughts and verify my achievement. 🎉",
+        ));
       }
     });
-    
-    // Show success message
-    Get.snackbar(
-      'Quest Completed',
-      'Congratulations! You earned ${_activeQuests.firstWhere((quest) => quest.id == id).points} points',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.blue.withOpacity(0.1),
-      colorText: Colors.blue,
-    );
   }
 
   @override
@@ -164,6 +185,11 @@ class _QuestPageState extends State<QuestPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate progress of completed quests
+    final int totalQuests = _activeQuests.length;
+    final int completedQuests = _activeQuests.where((quest) => quest.isCompleted).length;
+    final double progressPercentage = totalQuests > 0 ? completedQuests / totalQuests : 0.0;
+    
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -177,7 +203,52 @@ class _QuestPageState extends State<QuestPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
+            
+            // Add progress bar
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LinearProgressIndicator(
+                        value: progressPercentage,
+                        backgroundColor: Colors.grey[200],
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                        minHeight: 10,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '$completedQuests of $totalQuests quests completed',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${(progressPercentage * 100).toInt()}%',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 16),
             
             // Add new quest section
             Card(
