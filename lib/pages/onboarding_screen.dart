@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/pages/base_widget.dart'; // Import the base screen
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -135,9 +136,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             onPressed: () {
               Navigator.pop(context); // Close the dialog
               
-              // Instead of using named route, use Get.offAll to ensure proper navigation
-              // This will remove all previous routes and go back to the base page
-              Get.offAllNamed('/'); // Navigate to root which should show the base page
+              // Navigate directly to the BaseScreen
+              Get.offAll(() => const BaseScreen());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepPurple,
@@ -420,7 +420,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           const SizedBox(height: 40),
           ElevatedButton(
-            onPressed: _finishOnboarding,
+            //onPressed: _finishOnboarding,
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+              
+              // Navigate directly to the BaseScreen
+              Get.offAll(() => const BaseScreen());
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepPurple,
               foregroundColor: Colors.white,
