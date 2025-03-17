@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/pages/onboarding_screen.dart';
 import '../../models/profile_model.dart';
 import '../../services/profile_service.dart';
 
@@ -110,6 +111,38 @@ class _ProfilePageState extends State<ProfilePage> {
               }
             },
             child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Add method to navigate to the onboarding quiz
+  void _navigateToOnboardingQuiz() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Retake Onboarding Quiz'),
+        content: const Text(
+          'Would you like to retake the onboarding quiz? This will help us refine your personalized recommendations based on your current preferences and goals.',
+          style: TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Not Now'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // Navigate to onboarding and replace the current page
+              Get.to(() => OnboardingScreen(), fullscreenDialog: true);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurple,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Start Quiz'),
           ),
         ],
       ),
@@ -292,6 +325,38 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
+                
+                const Divider(),
+                
+                // Add Retake Onboarding Quiz button
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'App Preferences',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Card(
+                        elevation: 1,
+                        child: ListTile(
+                          leading: const Icon(Icons.quiz, color: Colors.deepPurple),
+                          title: const Text('Retake Onboarding Quiz'),
+                          subtitle: const Text('Update your preferences and goals'),
+                          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                          onTap: _navigateToOnboardingQuiz,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                const Divider(),
                 
                 // Achievements/Badges
                 Padding(

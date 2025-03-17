@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentalsustainability/pages/Home/home_page.dart';
 import '../services/auth_service.dart';
 import 'Profile/profile_page.dart';
 import 'Community/community_page.dart';
@@ -62,7 +63,7 @@ class _BaseScreenState extends State<BaseScreen> {
         index: _selectedIndex,
         children: <Widget>[
           // Home Page
-          const Center(child: Text("Home Page")),
+          const HomePage(),
           
           // Quests Page
           const QuestPage(),

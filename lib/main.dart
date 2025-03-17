@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mentalsustainability/pages/base_widget.dart';
 import 'firebase_options.dart';
 import 'package:get/get.dart';
 import 'pages/auth_wrapper.dart';
-import 'pages/onboarding_screen.dart'; // Add this import
+import 'pages/onboarding_screen.dart';
+import 'pages/Home/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,17 +30,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Mental Sustainability',
+      title: 'R N T',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: AuthWrapper(),
-      // Add routes for direct navigation if needed
-      routes: {
-        '/onboarding': (context) => OnboardingScreen(),
-      },
+      // Add routes for direct navigation
+      getPages: [
+        GetPage(name: '/', page: () => AuthWrapper()),
+        GetPage(name: '/onboarding', page: () => OnboardingScreen()),
+        GetPage(name: '/home', page: () => BaseScreen()), // Navigate to BasePage instead of just HomePage
+      ],
     );
   }
 }
