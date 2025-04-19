@@ -36,12 +36,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: AuthWrapper(),
+      home: BaseScreen(), // Changed from AuthWrapper() to BaseScreen() for testing
       // Add routes for direct navigation
       getPages: [
         GetPage(name: '/', page: () => AuthWrapper()),
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),
-        GetPage(name: '/home', page: () => BaseScreen()), // Navigate to BasePage instead of just HomePage
+        GetPage(name: '/home', page: () => BaseScreen()),
       ],
     );
   }
