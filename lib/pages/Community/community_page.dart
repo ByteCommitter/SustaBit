@@ -691,7 +691,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Anonymous Student",
+                          "",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,

@@ -16,7 +16,36 @@ class _ProfilePageState extends State<ProfilePage> {
     'joinDate': 'March 2023',
     'points': 1250,
     'completedQuests': 42,
-    'achievements': ['Eco Warrior', 'Mindfulness Master', 'Community Leader'],
+    'achievements': [
+      {
+        'name': 'Eco Warrior',
+        'description': 'Completed 10 sustainability challenges',
+        'icon': Icons.nature_people,
+        'color': Colors.green,
+        'level': 2,
+      },
+      {
+        'name': 'Mindfulness Master',
+        'description': 'Practiced mindfulness for 30 days',
+        'icon': Icons.self_improvement,
+        'color': Colors.blue,
+        'level': 3,
+      },
+      {
+        'name': 'Community Leader',
+        'description': 'Helped 5 other community members',
+        'icon': Icons.people,
+        'color': Colors.orange,
+        'level': 1,
+      },
+      {
+        'name': 'Knowledge Seeker',
+        'description': 'Completed all educational modules',
+        'icon': Icons.school,
+        'color': Colors.purple,
+        'level': 2,
+      },
+    ],
     'interests': ['Meditation', 'Sustainability', 'Mental Health'],
     'avatarColor': Colors.deepPurple,
   };
@@ -24,20 +53,17 @@ class _ProfilePageState extends State<ProfilePage> {
   // For editing profile
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
-  late TextEditingController _emailController;
   bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: _userData['name']);
-    _emailController = TextEditingController(text: _userData['email']);
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose();
     super.dispose();
   }
 
@@ -47,11 +73,10 @@ class _ProfilePageState extends State<ProfilePage> {
         // Save changes
         if (_formKey.currentState!.validate()) {
           _userData['name'] = _nameController.text;
-          _userData['email'] = _emailController.text;
           
           Get.snackbar(
             'Profile Updated',
-            'Your profile information has been updated successfully.',
+            'Your username has been updated successfully.',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green[100],
             colorText: Colors.green[800],
@@ -66,7 +91,6 @@ class _ProfilePageState extends State<ProfilePage> {
       } else {
         // Reset controllers when entering edit mode
         _nameController.text = _userData['name'];
-        _emailController.text = _userData['email'];
       }
       _isEditing = !_isEditing;
     });
@@ -85,8 +109,8 @@ class _ProfilePageState extends State<ProfilePage> {
             
             const SizedBox(height: 24),
             
-            // Profile info
-            _isEditing ? _buildEditForm() : _buildProfileInfo(),
+            // Profile info - just username edit when in edit mode
+            _isEditing ? _buildEditForm() : const SizedBox.shrink(),
             
             const SizedBox(height: 24),
             
@@ -95,29 +119,13 @@ class _ProfilePageState extends State<ProfilePage> {
             
             const SizedBox(height: 24),
             
-            // Achievements section
-            _buildAchievementsSection(),
+            // Enhanced Achievements section
+            _buildEnhancedAchievementsSection(),
             
             const SizedBox(height: 24),
             
             // Interests section
             _buildInterestsSection(),
-            
-            const SizedBox(height: 36),
-            
-            // Temporarily hidden logout button - remove Firebase dependency
-            // Center(
-            //   child: ElevatedButton.icon(
-            //     onPressed: _signOut,
-            //     icon: const Icon(Icons.logout),
-            //     label: const Text('Sign Out'),
-            //     style: ElevatedButton.styleFrom(
-            //       backgroundColor: Colors.red[400],
-            //       foregroundColor: Colors.white,
-            //       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -185,32 +193,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
   
-  Widget _buildProfileInfo() {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Profile Information',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildInfoRow(Icons.email, 'Email', _userData['email']),
-            const SizedBox(height: 12),
-            _buildInfoRow(Icons.calendar_today, 'Member Since', _userData['joinDate']),
-          ],
-        ),
-      ),
-    );
-  }
-  
   Widget _buildEditForm() {
     return Card(
       elevation: 1,
@@ -223,7 +205,7 @@ class _ProfilePageState extends State<ProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Edit Profile',
+                'Edit Username',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -235,33 +217,13 @@ class _ProfilePageState extends State<ProfilePage> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Name',
+                  labelText: 'Username',
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              
-              // Email field
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!GetUtils.isEmail(value)) {
-                    return 'Please enter a valid email';
+                    return 'Please enter your username';
                   }
                   return null;
                 },
@@ -288,33 +250,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
   
-  Widget _buildInfoRow(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(icon, size: 20, color: Colors.deepPurple),
-        const SizedBox(width: 8),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
-            ),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-  
   Widget _buildStatisticsSection() {
     return Card(
       elevation: 1,
@@ -325,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Statistics',
+              'Your Progress',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -373,7 +308,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
   
-  Widget _buildAchievementsSection() {
+  Widget _buildEnhancedAchievementsSection() {
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -382,28 +317,134 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Achievements',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Achievements',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextButton.icon(
+                  icon: const Icon(Icons.grid_view, size: 16),
+                  label: const Text("View All"),
+                  onPressed: () {
+                    // Future enhancement: Navigate to full achievements page
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.deepPurple,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _userData['achievements']
-                  .map<Widget>((achievement) => Chip(
-                        avatar: const Icon(Icons.emoji_events, color: Colors.amber, size: 16),
-                        label: Text(achievement),
-                        backgroundColor: Colors.amber.withOpacity(0.1),
-                      ))
-                  .toList(),
+            // Enhanced badges
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1.0,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              itemCount: _userData['achievements'].length,
+              itemBuilder: (context, index) {
+                final achievement = _userData['achievements'][index];
+                return _buildAchievementBadge(achievement);
+              },
             ),
           ],
         ),
+      ),
+    );
+  }
+  
+  Widget _buildAchievementBadge(Map<String, dynamic> achievement) {
+    return Container(
+      decoration: BoxDecoration(
+        color: achievement['color'].withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: achievement['color'].withOpacity(0.3),
+          width: 2,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Badge Icon with Level indicator
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: achievement['color'].withOpacity(0.2),
+                  border: Border.all(
+                    color: achievement['color'],
+                    width: 2,
+                  ),
+                ),
+                child: Icon(
+                  achievement['icon'],
+                  color: achievement['color'],
+                  size: 32,
+                ),
+              ),
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    border: Border.all(
+                      color: achievement['color'],
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Text(
+                    achievement['level'].toString(),
+                    style: TextStyle(
+                      color: achievement['color'],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            achievement['name'],
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              achievement['description'],
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.grey[600],
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -418,7 +459,7 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Interests',
+              'Your Interests',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
