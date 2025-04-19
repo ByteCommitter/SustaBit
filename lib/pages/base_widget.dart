@@ -25,7 +25,7 @@ class _BaseScreenState extends State<BaseScreen> {
   
   void _onItemTapped(int index) {
     // Limit index to 0-2 since we've temporarily removed Profile tab
-    if (index > 2) return;
+    if (index > 3) return;
     
     setState(() {
       _selectedIndex = index;
@@ -49,7 +49,7 @@ class _BaseScreenState extends State<BaseScreen> {
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline, color: Colors.deepPurple),
+            icon: const Icon(Icons.help_outline_rounded , color: Colors.deepPurple,size: 32,),
             onPressed: () {
               // Question mark functionality will be added later
             },
@@ -70,7 +70,7 @@ class _BaseScreenState extends State<BaseScreen> {
           const CommunityPage(),
           
           // Profile Page
-          //const ProfilePage(),
+          const ProfilePage(),
         ],
       ),
       
@@ -109,14 +109,12 @@ class _BaseScreenState extends State<BaseScreen> {
             label: 'Community',
           ),
           
-          // Profile - temporarily commented out
-          /* 
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
             label: 'Profile',
           ),
-          */
+          
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
