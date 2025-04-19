@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:mentalsustainability/pages/Home/home_page.dart';
 import '../services/auth_service.dart';
 import 'Profile/profile_page.dart';
@@ -426,7 +428,7 @@ class _BaseScreenState extends State<BaseScreen> {
                 Navigator.pop(context); // Close drawer
                 
                 // Navigate to the community page with moderator permissions
-                //Get.to(() => const CommunityPage(isModerator: true));
+                Get.to(() => const CommunityPage(isModerator: true));
               },
             ),
           ],
