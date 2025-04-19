@@ -422,38 +422,42 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
 
         // Bookshelf with background and columns
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              // Bookshelf background
-              image: DecorationImage(
-                image: const AssetImage('assets/images/wood_texture.png'),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.brown.shade700.withOpacity(0.8), 
-                  BlendMode.multiply
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            child: Container(
+              decoration: BoxDecoration(
+                // Bookshelf background
+                borderRadius: BorderRadius.circular(16),
+                image: DecorationImage(
+                  image: const AssetImage('assets/images/wood_texture.png'),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.brown.shade700.withOpacity(0.8), 
+                    BlendMode.multiply
+                  ),
                 ),
               ),
-            ),
-            child: Column(
-              children: [
-                // Row 1 of bookshelf
-                _buildBookshelfRow(
-                  [_saTeamMembers[0], _saTeamMembers[1], _saTeamMembers[2]],
-                  Colors.brown.shade800,
-                ),
-                
-                // Row 2 of bookshelf
-                _buildBookshelfRow(
-                  [_saTeamMembers[3], _saTeamMembers[4], _saTeamMembers[5]],
-                  Colors.brown.shade700,
-                ),
-                
-                // Row 3 of bookshelf
-                _buildBookshelfRow(
-                  [_saTeamMembers[6], _saTeamMembers[7], _saTeamMembers[8]],
-                  Colors.brown.shade600,
-                ),
-              ],
+              child: Column(
+                children: [
+                  // Row 1 of bookshelf
+                  _buildBookshelfRow(
+                    [_saTeamMembers[0], _saTeamMembers[1], _saTeamMembers[2]],
+                    Colors.brown.shade800,
+                  ),
+                  
+                  // Row 2 of bookshelf
+                  _buildBookshelfRow(
+                    [_saTeamMembers[3], _saTeamMembers[4], _saTeamMembers[5]],
+                    Colors.brown.shade700,
+                  ),
+                  
+                  // Row 3 of bookshelf
+                  _buildBookshelfRow(
+                    [_saTeamMembers[6], _saTeamMembers[7], _saTeamMembers[8]],
+                    Colors.brown.shade600,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
