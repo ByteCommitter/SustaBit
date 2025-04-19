@@ -11,7 +11,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // Mock user data
   final Map<String, dynamic> _userData = {
-    'name': 'Alex Johnson',
+    'name': 'Alex Johnson',  // Real name
+    'anonymousName': 'SereneSpirit42',  // Anonymous username for community
     'email': 'alex.johnson@example.com',
     'joinDate': 'March 2023',
     'points': 1250,
@@ -53,17 +54,20 @@ class _ProfilePageState extends State<ProfilePage> {
   // For editing profile
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
+  late TextEditingController _anonymousNameController;
   bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: _userData['name']);
+    _anonymousNameController = TextEditingController(text: _userData['anonymousName']);
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _anonymousNameController.dispose();
     super.dispose();
   }
 
@@ -72,11 +76,11 @@ class _ProfilePageState extends State<ProfilePage> {
       if (_isEditing) {
         // Save changes
         if (_formKey.currentState!.validate()) {
-          _userData['name'] = _nameController.text;
+          _userData['anonymousName'] = _anonymousNameController.text;
           
           Get.snackbar(
             'Profile Updated',
-            'Your username has been updated successfully.',
+            'Your anonymous username has been updated successfully.',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green[100],
             colorText: Colors.green[800],
@@ -90,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
         }
       } else {
         // Reset controllers when entering edit mode
-        _nameController.text = _userData['name'];
+        _anonymousNameController.text = _userData['anonymousName'];
       }
       _isEditing = !_isEditing;
     });
@@ -104,13 +108,13 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile header
+            // Profile header with real name
             _buildProfileHeader(),
             
             const SizedBox(height: 24),
             
-            // Profile info - just username edit when in edit mode
-            _isEditing ? _buildEditForm() : const SizedBox.shrink(),
+            // Anonymous username section
+            _buildAnonymousUsernameSection(),
             
             const SizedBox(height: 24),
             
@@ -150,11 +154,12 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         const SizedBox(width: 20),
         
-        // Name and points
+        // Real name and points
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Real name
               Text(
                 _userData['name'],
                 style: const TextStyle(
@@ -162,7 +167,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 4),
+              
+              const SizedBox(height: 8),
+              
+              // Points display
               Row(
                 children: [
                   const Icon(Icons.stars, color: Colors.amber, size: 20),
@@ -180,72 +188,206 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
         ),
-        
-        // Edit button
-        IconButton(
-          onPressed: _toggleEditMode,
-          icon: Icon(
-            _isEditing ? Icons.save : Icons.edit,
-            color: Colors.deepPurple,
-          ),
-        ),
       ],
     );
   }
-  
-  Widget _buildEditForm() {
+
+  // New method for anonymous username section
+  Widget _buildAnonymousUsernameSection() {
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Edit Username',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.person_outline, color: Colors.deepPurple),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Community Username',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
+                IconButton(
+                  onPressed: _toggleEditMode,
+                  icon: Icon(
+                    _isEditing ? Icons.save : Icons.edit,
+                    color: Colors.deepPurple,
+                  ),
+                  tooltip: 'Change anonymous username',
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            
+            // Anonymous name display or edit form
+            if (_isEditing)
+              _buildEditForm()
+            else
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurple.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.deepPurple.withOpacity(0.3)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.shield, size: 16, color: Colors.deepPurple),
+                            const SizedBox(width: 6),
+                            Text(
+                              _userData['anonymousName'],
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.deepPurple,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.green.withOpacity(0.3)),
+                        ),
+                        child: const Text(
+                          'Anonymous',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.green,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'This is your anonymous identity in the community section.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              
-              // Name field
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                  prefixIcon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your username';
-                  }
-                  return null;
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEditForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Anonymous username field
+          TextFormField(
+            controller: _anonymousNameController,
+            decoration: InputDecoration(
+              labelText: 'Anonymous Username',
+              helperText: 'This name will be visible in the community tab',
+              prefixIcon: const Icon(Icons.person_outline),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.refresh),
+                tooltip: 'Generate random username',
+                onPressed: () {
+                  // Generate a random username
+                  final options = [
+                    'MindfulWanderer',
+                    'SereneSpirit',
+                    'CalmExplorer',
+                    'PeacefulJourney',
+                    'GentleSoul',
+                    'TransquilThinker',
+                    'QuietObserver',
+                    'ZenPathfinder'
+                  ];
+                  final random = DateTime.now().millisecondsSinceEpoch % options.length;
+                  final randomNum = DateTime.now().second % 100;
+                  setState(() {
+                    _anonymousNameController.text = '${options[random]}$randomNum';
+                  });
                 },
               ),
-              
-              const SizedBox(height: 16),
-              
-              // Save button
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: _toggleEditMode,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Save Changes'),
-                ),
-              ),
-            ],
+              border: const OutlineInputBorder(),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a username';
+              }
+              return null;
+            },
           ),
-        ),
+          
+          const SizedBox(height: 16),
+          
+          // Privacy note
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.blue.withOpacity(0.3)),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.privacy_tip_outlined, 
+                  color: Colors.blue, 
+                  size: 20),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Your real name is never shown to other community members',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Save button
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton.icon(
+              onPressed: _toggleEditMode,
+              icon: const Icon(Icons.check),
+              label: const Text('Save Username'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

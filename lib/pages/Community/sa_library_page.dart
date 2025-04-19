@@ -18,9 +18,12 @@ class SALibraryPage extends StatelessWidget {
       body: Column(
         children: [
           // Header section
+          const SizedBox(height:15),
           Container(
             padding: const EdgeInsets.all(20),
             color: Colors.deepPurple.withOpacity(0.1),
+            //add a padding to the above of this container
+
             child: const Column(
               children: [
                 Text(

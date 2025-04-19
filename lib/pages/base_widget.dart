@@ -183,126 +183,219 @@ class _BaseScreenState extends State<BaseScreen> {
   
   Widget _buildDrawer() {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Colors.deepPurple,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'SustaBit Settings',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white, Colors.deepPurple.shade50],
+          ),
+        ),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Colors.deepPurple, Colors.deepPurple.shade300],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Customize your experience',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 14,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
                   ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.psychology, 
+                        color: Colors.white, 
+                        size: 32,
+                      ),
+                      SizedBox(width: 12),
+                      Text(
+                        'Sereine',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Mental wellness, simplified',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Take Personalised Quiz (renamed from "Retake Onboarding Quiz")
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ],
+                child: const Icon(Icons.quiz, color: Colors.amber),
+              ),
+              title: const Text('Take Personalised Quiz'),
+              subtitle: const Text('Customize your experience'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer first
+                _retakeOnboardingQuiz();
+              },
             ),
-          ),
-          
-          // Retake onboarding quiz
-          ListTile(
-            leading: const Icon(Icons.replay, color: Colors.deepPurple),
-            title: const Text('Retake Onboarding Quiz'),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer first
-              _retakeOnboardingQuiz();
-            },
-          ),
-          
-          const Divider(),
-          
-          // Dark mode toggle
-          SwitchListTile(
-            secondary: Icon(
-              _isDarkMode ? Icons.dark_mode : Icons.light_mode,
-              color: Colors.deepPurple,
+            
+            const Divider(),
+            
+            // Dark mode toggle - styled
+            SwitchListTile(
+              secondary: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.purple.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  _isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                  color: Colors.purple,
+                ),
+              ),
+              title: const Text('Dark Mode'),
+              subtitle: Text(_isDarkMode ? 'Switch to light theme' : 'Switch to dark theme'),
+              value: _isDarkMode,
+              onChanged: _toggleDarkMode,
             ),
-            title: const Text('Dark Mode'),
-            value: _isDarkMode,
-            onChanged: _toggleDarkMode,
-          ),
-          
-          // Notifications toggle
-          SwitchListTile(
-            secondary: Icon(
-              _notificationsEnabled ? Icons.notifications_active : Icons.notifications_off,
-              color: Colors.deepPurple,
+            
+            // Notifications toggle - styled
+            SwitchListTile(
+              secondary: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  _notificationsEnabled ? Icons.notifications_active : Icons.notifications_off,
+                  color: Colors.blue,
+                ),
+              ),
+              title: const Text('Notifications'),
+              subtitle: Text(_notificationsEnabled ? 'Notifications are enabled' : 'Notifications are disabled'),
+              value: _notificationsEnabled,
+              onChanged: _toggleNotifications,
             ),
-            title: const Text('Notifications'),
-            value: _notificationsEnabled,
-            onChanged: _toggleNotifications,
-          ),
-          
-          const Divider(),
-          
-          // Guide
-          ListTile(
-            leading: const Icon(Icons.menu_book, color: Colors.deepPurple),
-            title: const Text('User Guide'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Navigate to user guide
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Opening user guide...')),
-              );
-            },
-          ),
-          
-          // Privacy
-          ListTile(
-            leading: const Icon(Icons.privacy_tip, color: Colors.deepPurple),
-            title: const Text('Privacy Policy'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Navigate to privacy policy
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Opening privacy policy...')),
-              );
-            },
-          ),
-          
-          // About
-          ListTile(
-            leading: const Icon(Icons.info, color: Colors.deepPurple),
-            title: const Text('About SustaBit'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Navigate to about page
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Opening about page...')),
-              );
-            },
-          ),
-          
-          const Divider(),
-          
-          // Sign out (optional)
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text('Sign Out', style: TextStyle(color: Colors.red)),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Implement sign out functionality
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Signing out...')),
-              );
-            },
-          ),
-        ],
+            
+            const Divider(),
+            
+            // Section header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Text(
+                'HELP & INFORMATION',
+                style: TextStyle(
+                  color: Colors.grey[700],
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            
+            // Guide - styled
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.menu_book, color: Colors.green),
+              ),
+              title: const Text('User Guide'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const GuidePage())
+                );
+              },
+            ),
+            
+            // Privacy - styled
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.indigo.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.privacy_tip, color: Colors.indigo),
+              ),
+              title: const Text('Privacy Policy'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Opening privacy policy...')),
+                );
+              },
+            ),
+            
+            // About - styled
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.teal.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.info, color: Colors.teal),
+              ),
+              title: const Text('About Sereine'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Opening about page...')),
+                );
+              },
+            ),
+            
+            const Divider(),
+            
+            // Sign out - styled
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.logout, size: 18),
+                label: const Text('Sign Out'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Signing out...')),
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.red[700],
+                  side: BorderSide(color: Colors.red[200]!),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
