@@ -3,11 +3,17 @@ import 'package:get/get.dart';
 import 'sa_library_page.dart';
 import 'post_thread_page.dart';
 import 'sa_chat_page.dart'; // Add this import
+import 'package:mentalsustainability/pages/Community/moderator_dashboard.dart';
 
 class CommunityPage extends StatefulWidget {
   final String? prefilledPost;
+  final bool isModerator;
   
-  const CommunityPage({super.key, this.prefilledPost});
+  const CommunityPage({
+    super.key, 
+    this.prefilledPost,
+    this.isModerator = false, // Default to false
+  });
 
   @override
   State<CommunityPage> createState() => _CommunityPageState();
@@ -141,6 +147,12 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
     ),
   ];
 
+  // Current user identifier - in a real app this would come from authentication
+  final String currentUser = 'You';
+  
+  // Banned users set
+  final Set<String> _bannedUsers = {};
+
   @override
   void initState() {
     super.initState();
@@ -153,6 +165,23 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
     // If post is prefilled, ensure we start on the Threads tab
     if (widget.prefilledPost != null && widget.prefilledPost!.isNotEmpty) {
       _tabController.animateTo(0); // Switch to Threads tab
+    }
+
+    // If user is a moderator, show an indication
+    if (widget.isModerator) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        Get.snackbar(
+          'Moderator Mode',
+          'You have elevated permissions to manage community content.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.orange.withOpacity(0.9),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 8,
+          duration: const Duration(seconds: 3),
+          icon: const Icon(Icons.shield, color: Colors.white),
+        );
+      });
     }
   }
   
@@ -238,10 +267,11 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
             color: Colors.white,
             child: Column(
               children: [
-                // App bar with title - search button removed
+                // App bar with title and moderator access if applicable
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         "Community",
@@ -250,7 +280,20 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      // Search button removed
+                      // Moderator dashboard button (only visible for moderators)
+                      if (widget.isModerator)
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Get.to(() => const ModeratorDashboard());
+                          },
+                          icon: const Icon(Icons.admin_panel_settings),
+                          label: const Text('Mod Panel'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -1415,134 +1458,524 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
   Widget _buildPostCard(CommunityPost post) {
     final bool isLiked = _likedPosts[post.id] ?? false;
     final bool isSaved = _savedPosts[post.id] ?? false;
+    final bool isOwnPost = post.username == currentUser;
+    final bool isUserBanned = _bannedUsers.contains(post.username);
     
     return GestureDetector(
       onTap: () => _openPostThread(post),
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
         elevation: 1,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Post header
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.deepPurple.withOpacity(0.2),
-                    child: Text(
-                      post.username.substring(0, 1).toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.deepPurple,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+        color: isUserBanned ? Colors.grey[100] : null,
+        child: Stack(
+          children: [
+            // Banned overlay if user is banned
+            if (isUserBanned && widget.isModerator)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.03),
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        post.username,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.red.withOpacity(0.3)),
                       ),
-                      Text(
-                        post.timeAgo,
+                      child: const Text(
+                        'USER BANNED',
                         style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              
-              // Post content
-              Text(post.content),
-              
-              // Post image (if available)
-              if (post.imageUrl != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      post.imageUrl!,
-                      width: double.infinity,
-                      height: 200,
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-              const SizedBox(height: 12),
-              
-              // Post actions with hearts and save
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+            
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Heart/Like button
+                  // Post header with three-dots menu
                   Row(
                     children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.deepPurple.withOpacity(0.2),
+                        child: Text(
+                          post.username.substring(0, 1).toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.deepPurple,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              isUserBanned ? "${post.username} (banned)" : post.username,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isUserBanned ? Colors.grey : null,
+                              ),
+                            ),
+                            Text(
+                              post.timeAgo,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      // Three-dot menu for post actions
+                      PopupMenuButton<String>(
+                        icon: const Icon(Icons.more_vert, color: Colors.grey),
+                        onSelected: (value) {
+                          if (value == 'report') {
+                            _reportPost(post);
+                          } else if (value == 'delete') {
+                            _deletePost(post);
+                          } else if (value == 'mod_delete') {
+                            _deletePostAsModerator(post);
+                          } else if (value == 'ban_user') {
+                            _banUser(post.username);
+                          } else if (value == 'unban_user') {
+                            _unbanUser(post.username);
+                          }
+                        },
+                        itemBuilder: (context) {
+                          List<PopupMenuItem<String>> items = [];
+                          
+                          // Delete option for own posts
+                          if (isOwnPost) {
+                            items.add(
+                              const PopupMenuItem<String>(
+                                value: 'delete',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                                    SizedBox(width: 8),
+                                    Text('Delete my post'),
+                                  ],
+                                ),
+                              ),
+                            );
+                          } 
+                          
+                          // Additional moderator actions
+                          if (widget.isModerator) {
+                            // Only add mod delete if it's not the user's own post
+                            if (!isOwnPost) {
+                              items.add(
+                                const PopupMenuItem<String>(
+                                  value: 'mod_delete',
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.no_accounts, color: Colors.orange, size: 20),
+                                      SizedBox(width: 8),
+                                      Text('Delete as moderator'),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                            
+                            // Ban/Unban user option
+                            if (!isOwnPost) {
+                              if (isUserBanned) {
+                                items.add(
+                                  const PopupMenuItem<String>(
+                                    value: 'unban_user',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.person_add, color: Colors.green, size: 20),
+                                        SizedBox(width: 8),
+                                        Text('Unban user'),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                items.add(
+                                  const PopupMenuItem<String>(
+                                    value: 'ban_user',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.block, color: Colors.red, size: 20),
+                                        SizedBox(width: 8),
+                                        Text('Ban user'),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          }
+                          
+                          // Report option (for posts that aren't yours)
+                          if (!isOwnPost) {
+                            items.add(
+                              const PopupMenuItem<String>(
+                                value: 'report',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.flag_outlined, color: Colors.amber, size: 20),
+                                    SizedBox(width: 8),
+                                    Text('Report post'),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          
+                          return items;
+                        },
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 12),
+                  
+                  // Post content
+                  Text(
+                    isUserBanned ? "[Content removed]" : post.content,
+                    style: TextStyle(
+                      color: isUserBanned ? Colors.grey : null,
+                    ),
+                  ),
+                  
+                  // Post image (if available)
+                  if (post.imageUrl != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          post.imageUrl!,
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 12),
+                  
+                  // Post actions with hearts and save
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Heart/Like button
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () => _handleLike(post.id),
+                            icon: Icon(
+                              isLiked ? Icons.favorite : Icons.favorite_border,
+                              color: isLiked ? Colors.red : null,
+                            ),
+                            constraints: const BoxConstraints(),
+                            padding: EdgeInsets.zero,
+                            iconSize: 20,
+                          ),
+                          const SizedBox(width: 4),
+                          Text('${post.likesCount}'),
+                        ],
+                      ),
+                      
+                      // Comments
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () => _openPostThread(post),
+                            icon: const Icon(Icons.comment_outlined),
+                            color: Colors.blue,
+                            constraints: const BoxConstraints(),
+                            padding: EdgeInsets.zero,
+                            iconSize: 20,
+                          ),
+                          const SizedBox(width: 4),
+                          Text('${post.commentsCount}'),
+                        ],
+                      ),
+                      
+                      // Share
                       IconButton(
-                        onPressed: () => _handleLike(post.id),
+                        onPressed: () {},
+                        icon: const Icon(Icons.share_outlined),
+                        constraints: const BoxConstraints(),
+                        padding: EdgeInsets.zero,
+                        iconSize: 20,
+                      ),
+                      
+                      // Save post
+                      IconButton(
+                        onPressed: () => _toggleSavePost(post.id),
                         icon: Icon(
-                          isLiked ? Icons.favorite : Icons.favorite_border,
-                          color: isLiked ? Colors.red : null,
+                          isSaved ? Icons.bookmark : Icons.bookmark_border,
+                          color: isSaved ? Colors.deepPurple : null,
                         ),
                         constraints: const BoxConstraints(),
                         padding: EdgeInsets.zero,
                         iconSize: 20,
                       ),
-                      const SizedBox(width: 4),
-                      Text('${post.likesCount}'),
                     ],
-                  ),
-                  
-                  // Comments
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => _openPostThread(post),
-                        icon: const Icon(Icons.comment_outlined),
-                        color: Colors.blue,
-                        constraints: const BoxConstraints(),
-                        padding: EdgeInsets.zero,
-                        iconSize: 20,
-                      ),
-                      const SizedBox(width: 4),
-                      Text('${post.commentsCount}'),
-                    ],
-                  ),
-                  
-                  // Share
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.share_outlined),
-                    constraints: const BoxConstraints(),
-                    padding: EdgeInsets.zero,
-                    iconSize: 20,
-                  ),
-                  
-                  // Save post
-                  IconButton(
-                    onPressed: () => _toggleSavePost(post.id),
-                    icon: Icon(
-                      isSaved ? Icons.bookmark : Icons.bookmark_border,
-                      color: isSaved ? Colors.deepPurple : null,
-                    ),
-                    constraints: const BoxConstraints(),
-                    padding: EdgeInsets.zero,
-                    iconSize: 20,
                   ),
                 ],
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  // New method to delete your own post
+  void _deletePost(CommunityPost post) {
+    // Show confirmation dialog
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Post?'),
+        content: const Text('This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('CANCEL'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() {
+                _posts.removeWhere((p) => p.id == post.id);
+              });
+              
+              Get.snackbar(
+                'Post Deleted',
+                'Your post has been removed.',
+                snackPosition: SnackPosition.BOTTOM,
+                backgroundColor: Colors.grey[100],
+                colorText: Colors.grey[800],
+                margin: const EdgeInsets.all(16),
+                borderRadius: 8,
+                duration: const Duration(seconds: 2),
+              );
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: const Text('DELETE'),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  // Moderator action to delete any post
+  void _deletePostAsModerator(CommunityPost post) {
+    // Show confirmation dialog with reason field
+    showDialog(
+      context: context,
+      builder: (context) {
+        final reasonController = TextEditingController();
+        
+        return AlertDialog(
+          title: const Text('Delete Post as Moderator'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('This action cannot be undone.'),
+              const SizedBox(height: 16),
+              TextField(
+                controller: reasonController,
+                decoration: const InputDecoration(
+                  labelText: 'Reason for deletion',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 2,
+              ),
             ],
           ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('CANCEL'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  _posts.removeWhere((p) => p.id == post.id);
+                });
+                
+                Get.snackbar(
+                  'Moderator Action',
+                  'Post by ${post.username} has been removed',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.orange[100],
+                  colorText: Colors.orange[900],
+                  margin: const EdgeInsets.all(16),
+                  borderRadius: 8,
+                  duration: const Duration(seconds: 2),
+                );
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              child: const Text('DELETE'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  
+  // Moderator action to ban a user
+  void _banUser(String username) {
+    // Show confirmation dialog with reason field
+    showDialog(
+      context: context,
+      builder: (context) {
+        final reasonController = TextEditingController();
+        
+        return AlertDialog(
+          title: const Text('Ban User'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Ban $username from posting in the community?'),
+              const SizedBox(height: 16),
+              TextField(
+                controller: reasonController,
+                decoration: const InputDecoration(
+                  labelText: 'Reason for ban',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 2,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('CANCEL'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  _bannedUsers.add(username);
+                });
+                
+                Get.snackbar(
+                  'Moderator Action',
+                  'User $username has been banned',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red[100],
+                  colorText: Colors.red[900],
+                  margin: const EdgeInsets.all(16),
+                  borderRadius: 8,
+                  duration: const Duration(seconds: 2),
+                );
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              child: const Text('BAN USER'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  
+  // Moderator action to unban a user
+  void _unbanUser(String username) {
+    setState(() {
+      _bannedUsers.remove(username);
+    });
+    
+    Get.snackbar(
+      'Moderator Action',
+      'User $username has been unbanned',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.green[100],
+      colorText: Colors.green[900],
+      margin: const EdgeInsets.all(16),
+      borderRadius: 8,
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  // Add a new method to handle post reporting
+  void _reportPost(CommunityPost post) {
+    // Show report dialog
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Report Post'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Why are you reporting this post?'),
+            const SizedBox(height: 16),
+            _buildReportOption('Inappropriate content'),
+            _buildReportOption('Harassment or bullying'),
+            _buildReportOption('False information'),
+            _buildReportOption('Spam'),
+            _buildReportOption('Something else'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('CANCEL'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to build report options
+  Widget _buildReportOption(String reason) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).pop(); // Close dialog
+        
+        // Show confirmation
+        Get.snackbar(
+          'Report submitted',
+          'Thank you for helping keep our community safe. We\'ll review this post.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.blue[100],
+          colorText: Colors.blue[800],
+          margin: const EdgeInsets.all(16),
+          borderRadius: 8,
+          duration: const Duration(seconds: 3),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            const Icon(Icons.radio_button_unchecked, size: 18, color: Colors.deepPurple),
+            const SizedBox(width: 12),
+            Text(reason),
+          ],
         ),
       ),
     );

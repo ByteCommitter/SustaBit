@@ -111,22 +111,22 @@ class _ProfilePageState extends State<ProfilePage> {
             // Profile header with real name
             _buildProfileHeader(),
             
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             
             // Anonymous username section
             _buildAnonymousUsernameSection(),
             
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             
             // Statistics section
             _buildStatisticsSection(),
             
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             
             // Enhanced Achievements section
             _buildEnhancedAchievementsSection(),
             
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             
             // Interests section
             _buildInterestsSection(),

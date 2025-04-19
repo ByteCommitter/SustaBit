@@ -394,6 +394,41 @@ class _BaseScreenState extends State<BaseScreen> {
                 ),
               ),
             ),
+            
+            const Divider(),
+            
+            // Developer section (only for demo purposes)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Text(
+                'DEVELOPER OPTIONS',
+                style: TextStyle(
+                  color: Colors.grey[700],
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            
+            // Moderator mode toggle
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.admin_panel_settings, color: Colors.red),
+              ),
+              title: const Text('Moderator Mode (Demo)'),
+              subtitle: const Text('View community with moderator permissions'),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+                
+                // Navigate to the community page with moderator permissions
+                //Get.to(() => const CommunityPage(isModerator: true));
+              },
+            ),
           ],
         ),
       ),
