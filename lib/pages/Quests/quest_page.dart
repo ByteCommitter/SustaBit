@@ -149,32 +149,71 @@ class _QuestPageState extends State<QuestPage> {
   
   // Verify a quest (mark as completed)
   void _verifyQuest(String id) {
-    setState(() {
-      final questIndex = _activeQuests.indexWhere((quest) => quest.id == id);
-      if (questIndex != -1) {
-        _activeQuests[questIndex] = _activeQuests[questIndex].copyWith(isCompleted: true);
-        
-        // Get the completed quest
-        final completedQuest = _activeQuests[questIndex];
-        
-        // Updated success message with solid background
-        Get.snackbar(
-          'Quest Completed',
-          'Congratulations! Share with the community to get points when others verify your achievement.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.blue[100], // Solid light blue background
-          colorText: Colors.blue[800], // Dark blue text for contrast
-          margin: const EdgeInsets.all(16),
-          borderRadius: 8,
-          duration: const Duration(seconds: 3),
-        );
-        
-        // Navigate to community page to share accomplishment
-        Get.to(() => CommunityPage(
-          prefilledPost: "I just completed the quest: ${completedQuest.title}! Share your thoughts and verify my achievement. 🎉",
-        ));
-      }
-    });
+    final questIndex = _activeQuests.indexWhere((quest) => quest.id == id);
+    if (questIndex != -1) {
+      final completedQuest = _activeQuests[questIndex];
+      
+      // Show dialog instead of directly navigating
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Quest Completed'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Congratulations on completing "${completedQuest.title}"!'),
+              const SizedBox(height: 8),
+              const Text('Would you like to share your achievement with the community to verify and gain points?'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Just mark as complete without sharing
+                setState(() {
+                  _activeQuests[questIndex] = _activeQuests[questIndex].copyWith(isCompleted: true);
+                });
+                Navigator.pop(context); // Close dialog
+                
+                Get.snackbar(
+                  'Quest Completed',
+                  'Well done! You\'ve earned 10 points!',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.blue[100], 
+                  colorText: Colors.blue[800],
+                  margin: const EdgeInsets.all(16),
+                  borderRadius: 8,
+                  duration: const Duration(seconds: 3),
+                );
+              },
+              child: const Text('Just Complete'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Just mark as complete without sharing
+                setState(() {
+                  _activeQuests[questIndex] = _activeQuests[questIndex].copyWith(isCompleted: true);
+                });
+                Navigator.pop(context); // Close dialog
+                
+                Get.snackbar(
+                  'Quest Completed',
+                  'Posted on Community! You\'ve earned 30 points!',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.blue[100], 
+                  colorText: Colors.blue[800],
+                  margin: const EdgeInsets.all(16),
+                  borderRadius: 8,
+                  duration: const Duration(seconds: 3),
+                );
+              },
+              child: const Text('Just Complete'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -196,50 +235,27 @@ class _QuestPageState extends State<QuestPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Quests',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            
-            // Add progress bar
+            // More compact header section
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      LinearProgressIndicator(
-                        value: progressPercentage,
-                        backgroundColor: Colors.grey[200],
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
-                        minHeight: 10,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '$completedQuests of $totalQuests quests completed',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
+                const Text(
+                  'Quests',
+                  style: TextStyle(
+                    fontSize: 20, // Reduced font size from 24
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), // Smaller padding
                   decoration: BoxDecoration(
                     color: Colors.deepPurple.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8), // Smaller radius
                   ),
                   child: Text(
-                    '${(progressPercentage * 100).toInt()}%',
-                    style: const TextStyle(
+                    '${(progressPercentage * 100).toInt()}% Complete',
+                    style: TextStyle(
+                      fontSize: 11, // Smaller font
                       fontWeight: FontWeight.bold,
                       color: Colors.deepPurple,
                     ),
@@ -247,14 +263,37 @@ class _QuestPageState extends State<QuestPage> {
                 ),
               ],
             ),
+            const SizedBox(height: 4), // Reduced space
             
-            const SizedBox(height: 16),
+            // More compact progress bar
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LinearProgressIndicator(
+                  value: progressPercentage,
+                  backgroundColor: Colors.grey[200],
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                  minHeight: 6, // Reduced from 10 to 6
+                  borderRadius: BorderRadius.circular(3), // Smaller radius
+                ),
+                const SizedBox(height: 2), // Reduced from 4 to 2
+                Text(
+                  '$completedQuests of $totalQuests quests completed',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 10, // Reduced from 12 to 10
+                  ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 8), // Reduced spacing
             
             // Add new quest section
             Card(
               elevation: 2,
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(10), // Reduced padding further
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -262,14 +301,16 @@ class _QuestPageState extends State<QuestPage> {
                       'Add Your Own Quest',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 14, // Reduced font size
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 6), // Reduced spacing
                     TextField(
                       controller: _questController,
                       decoration: InputDecoration(
                         hintText: 'Enter a new quest',
+                        isDense: true, // More compact TextField
+                        contentPadding: const EdgeInsets.all(10),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
@@ -278,8 +319,10 @@ class _QuestPageState extends State<QuestPage> {
                         fillColor: Colors.grey[100],
                         suffixIcon: IconButton(
                           onPressed: () => _addQuest(_questController.text),
-                          icon: const Icon(Icons.add_circle),
+                          icon: const Icon(Icons.add_circle, size: 20), // Smaller icon
                           color: Colors.deepPurple,
+                          padding: EdgeInsets.zero, // No padding for icon
+                          constraints: const BoxConstraints(), // Minimize constraints
                         ),
                       ),
                     ),
@@ -288,30 +331,65 @@ class _QuestPageState extends State<QuestPage> {
               ),
             ),
             
-            const SizedBox(height: 20),
+            const SizedBox(height: 12), // Reduced spacing
             
             // Active quests section
-            const Text(
-              'My Active Quests',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'My Active Quests',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // Add scroll indicator text
+                Text(
+                  'Scroll to see all',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8), // Reduced spacing
             
             // List of active quests
             Expanded(
+              flex: 3, // Give more space to active quests
               child: _activeQuests.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No active quests. Add one above or from suggestions below.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey),
+                  ? Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.hourglass_empty, size: 40, color: Colors.grey),
+                            SizedBox(height: 8),
+                            Text(
+                              'No active quests yet',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            Text(
+                              'Add one above or from suggestions below',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                          ],
+                        ),
                       ),
                     )
-                  : ListView.builder(
+                  : ListView.builder( // Replaced the ShaderMask with a simple ListView
                       itemCount: _activeQuests.length,
+                      padding: const EdgeInsets.only(bottom: 8),
                       itemBuilder: (context, index) {
                         final quest = _activeQuests[index];
                         return _buildQuestCard(
@@ -323,40 +401,94 @@ class _QuestPageState extends State<QuestPage> {
                     ),
             ),
             
-            const SizedBox(height: 20),
+            const SizedBox(height: 12), // Reduced spacing
             
-            // Personalized suggestions section
-            const Text(
-              'Personalized Quest Suggestions',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            // Personalized suggestions section - now in a box
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.amber.withOpacity(0.05),
+                border: Border.all(
+                  color: Colors.amber.withOpacity(0.3),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header with scroll indicator
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Personalized Quest Suggestions',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      // Add scroll indicator text
+                      Text(
+                        'Scroll to see all',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8), // Reduced spacing
+                  
+                  // List of personalized suggestions
+                  SizedBox(
+                    height: 200, // Fixed height for suggestions section
+                    child: _personalizedQuests.isEmpty
+                        ? Center(
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.notifications_off, size: 40, color: Colors.grey),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'No more suggestions',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  Text(
+                                    'Check back later!',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: _personalizedQuests.length,
+                            padding: const EdgeInsets.only(bottom: 8),
+                            itemBuilder: (context, index) {
+                              final quest = _personalizedQuests[index];
+                              return _buildSuggestionCard(
+                                quest,
+                                onAdd: () => _addSuggestedQuest(quest),
+                              );
+                            },
+                          ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 10),
             
-            // List of personalized suggestions
-            SizedBox(
-              height: 200, // Fixed height for suggestions
-              child: _personalizedQuests.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No more suggestions. Check back later!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: _personalizedQuests.length,
-                      itemBuilder: (context, index) {
-                        final quest = _personalizedQuests[index];
-                        return _buildSuggestionCard(
-                          quest,
-                          onAdd: () => _addSuggestedQuest(quest),
-                        );
-                      },
-                    ),
-            ),
+            // Add some bottom padding
+            const SizedBox(height: 12),
           ],
         ),
       ),
@@ -370,7 +502,7 @@ class _QuestPageState extends State<QuestPage> {
       color: quest.isCompleted ? Colors.grey[100] : Colors.white,
       elevation: quest.isCompleted ? 0 : 1,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12), // Reduced padding
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -413,7 +545,7 @@ class _QuestPageState extends State<QuestPage> {
                           fontSize: 14,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4), // Reduced spacing
                       Text(
                         '${quest.points} points',
                         style: TextStyle(
@@ -428,18 +560,18 @@ class _QuestPageState extends State<QuestPage> {
               ],
             ),
             
-            const SizedBox(height: 12),
+            const SizedBox(height: 8), // Reduced spacing
             
             // Action buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                // Verify button (only if not completed)
+                // Complete button (renamed from Verify)
                 if (!quest.isCompleted)
                   ElevatedButton.icon(
                     onPressed: () => onVerify(),
                     icon: const Icon(Icons.check_circle, size: 16),
-                    label: const Text('Verify'),
+                    label: const Text('Complete'), // Changed from "Verify" to "Complete"
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
@@ -479,7 +611,7 @@ class _QuestPageState extends State<QuestPage> {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12), // Reduced padding
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
