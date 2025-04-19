@@ -189,26 +189,23 @@ class _QuestPageState extends State<QuestPage> {
               },
               child: const Text('Just Complete'),
             ),
-            TextButton(
+            ElevatedButton(  // Changed from TextButton to ElevatedButton for emphasis
               onPressed: () {
-                // Just mark as complete without sharing
+                // Mark as complete and share
                 setState(() {
                   _activeQuests[questIndex] = _activeQuests[questIndex].copyWith(isCompleted: true);
                 });
                 Navigator.pop(context); // Close dialog
                 
-                Get.snackbar(
-                  'Quest Completed',
-                  'Posted on Community! You\'ve earned 30 points!',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.blue[100], 
-                  colorText: Colors.blue[800],
-                  margin: const EdgeInsets.all(16),
-                  borderRadius: 8,
-                  duration: const Duration(seconds: 3),
-                );
+                // Navigate to community page to share accomplishment
+                Get.to(() => CommunityPage(
+                  prefilledPost: "I just completed the quest: ${completedQuest.title}! Share your thoughts and verify my achievement. 🎉",
+                ));
               },
-              child: const Text('Just Complete'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+              ),
+              child: const Text('Share & Complete'),  // Fixed button text
             ),
           ],
         ),
@@ -359,7 +356,7 @@ class _QuestPageState extends State<QuestPage> {
             
             // List of active quests
             Expanded(
-              flex: 3, // Give more space to active quests
+              flex: 4, // Increased flex to give more space to active quests
               child: _activeQuests.isEmpty
                   ? Center(
                       child: Container(
@@ -401,9 +398,9 @@ class _QuestPageState extends State<QuestPage> {
                     ),
             ),
             
-            const SizedBox(height: 12), // Reduced spacing
+            const SizedBox(height: 16), // Increased spacing to move suggestions box lower
             
-            // Personalized suggestions section - now in a box
+            // Personalized suggestions section - now in a box with reduced height
             Container(
               decoration: BoxDecoration(
                 color: Colors.amber.withOpacity(0.05),
@@ -413,37 +410,41 @@ class _QuestPageState extends State<QuestPage> {
                 ),
                 borderRadius: BorderRadius.circular(12),
               ),
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(8), // Reduced padding to prevent overflow
               child: Column(
+                mainAxisSize: MainAxisSize.min, // Allow column to shrink
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header with scroll indicator
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Personalized Quest Suggestions',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4, right: 4, top: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Personalized Quest Suggestions',
+                          style: TextStyle(
+                            fontSize: 16, // Reduced font size
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      // Add scroll indicator text
-                      Text(
-                        'Scroll to see all',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                          fontStyle: FontStyle.italic,
+                        // Add scroll indicator text
+                        Text(
+                          'Scroll to see all',
+                          style: TextStyle(
+                            fontSize: 11, // Reduced font size
+                            color: Colors.grey[600],
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 8), // Reduced spacing
+                  const SizedBox(height: 4), // Reduced spacing
                   
                   // List of personalized suggestions
                   SizedBox(
-                    height: 200, // Fixed height for suggestions section
+                    height: 160, // Reduced fixed height to prevent overflow
                     child: _personalizedQuests.isEmpty
                         ? Center(
                             child: Container(
@@ -473,10 +474,10 @@ class _QuestPageState extends State<QuestPage> {
                           )
                         : ListView.builder(
                             itemCount: _personalizedQuests.length,
-                            padding: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.only(bottom: 4), // Reduced padding
                             itemBuilder: (context, index) {
                               final quest = _personalizedQuests[index];
-                              return _buildSuggestionCard(
+                              return _buildCompactSuggestionCard( // Using a more compact card
                                 quest,
                                 onAdd: () => _addSuggestedQuest(quest),
                               );
@@ -682,6 +683,94 @@ class _QuestPageState extends State<QuestPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Build a more compact suggestion card for personalized quests
+  Widget _buildCompactSuggestionCard(Quest quest, {required Function onAdd}) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 6), // Reduced margin
+      elevation: 1, // Reduced elevation
+      child: Padding(
+        padding: const EdgeInsets.all(8), // Reduced padding
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Quest Icon - made smaller
+                Container(
+                  padding: const EdgeInsets.all(6), // Reduced padding
+                  decoration: BoxDecoration(
+                    color: Colors.amber.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(6), // Smaller radius
+                  ),
+                  child: const Icon(
+                    Icons.lightbulb,
+                    color: Colors.amber,
+                    size: 18, // Smaller icon
+                  ),
+                ),
+                const SizedBox(width: 8), // Reduced spacing
+                
+                // Quest details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        quest.title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14, // Smaller text
+                        ),
+                      ),
+                      const SizedBox(height: 2), // Reduced spacing
+                      Text(
+                        quest.description,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12, // Smaller text
+                        ),
+                        maxLines: 2, // Limit to 2 lines
+                        overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
+                      ),
+                      const SizedBox(height: 4), // Reduced spacing
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Points
+                          Text(
+                            '${quest.points} points',
+                            style: const TextStyle(
+                              color: Colors.deepPurple,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12, // Smaller text
+                            ),
+                          ),
+                          // Add button - more compact
+                          TextButton.icon(
+                            onPressed: () => onAdd(),
+                            icon: const Icon(Icons.add_circle, size: 14),
+                            label: const Text('Add', style: TextStyle(fontSize: 12)),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.deepPurple,
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              minimumSize: Size.zero, // Allow smaller size
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Smaller tap target
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
