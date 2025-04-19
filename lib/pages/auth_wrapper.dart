@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../services/auth_service.dart';
-import 'onboarding_screen.dart';
 import 'base_widget.dart';
 
 class AuthWrapper extends StatelessWidget {

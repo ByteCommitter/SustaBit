@@ -251,7 +251,7 @@ class _QuestPageState extends State<QuestPage> {
                   ),
                   child: Text(
                     '${(progressPercentage * 100).toInt()}% Complete',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 11, // Smaller font
                       fontWeight: FontWeight.bold,
                       color: Colors.deepPurple,
@@ -269,7 +269,7 @@ class _QuestPageState extends State<QuestPage> {
                 LinearProgressIndicator(
                   value: progressPercentage,
                   backgroundColor: Colors.grey[200],
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
                   minHeight: 6, // Reduced from 10 to 6
                   borderRadius: BorderRadius.circular(3), // Smaller radius
                 ),
@@ -549,7 +549,7 @@ class _QuestPageState extends State<QuestPage> {
                       const SizedBox(height: 4), // Reduced spacing
                       Text(
                         '${quest.points} points',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.deepPurple,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,

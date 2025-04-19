@@ -120,18 +120,18 @@ class _BaseScreenState extends State<BaseScreen> {
 
       body: IndexedStack(
         index: _selectedIndex,
-        children: <Widget>[
+        children: const <Widget>[
           // Home Page
-          const HomePage(),
+          HomePage(),
           
           // Quests Page
-          const QuestPage(),
+          QuestPage(),
           
           // Community Page
-          const CommunityPage(),
+          CommunityPage(),
           
           // Profile Page
-          const ProfilePage(),
+          ProfilePage(),
         ],
       ),
       

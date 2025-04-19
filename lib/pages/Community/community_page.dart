@@ -33,7 +33,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
   final Map<String, bool> _savedPosts = {};
   
   // Track total user points
-  int _userPoints = 0;
+  final int _userPoints = 0;
 
   final List<CommunityPost> _posts = [
     CommunityPost(
@@ -1061,7 +1061,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                 const Text(
                   "Finding connection in a sea of people",
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 23,
                     fontWeight: FontWeight.bold,
                     color: Colors.deepPurple,
                   ),
@@ -1071,7 +1071,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                 // Description
                 const Text(
                   "Many students feel lonely despite being surrounded by others. Seremate helps you connect anonymously with fellow students for walks, meals, study sessions, or just conversations.",
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 20),
                 ),
                 const SizedBox(height: 16),
                 
@@ -1086,7 +1086,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                     const Expanded(
                       child: Text(
                         "Start anonymously, share contact info only when comfortable",
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 20),
                       ),
                     ),
                   ],
@@ -1102,7 +1102,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                     const Expanded(
                       child: Text(
                         "Connect based on activities and shared interests",
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 20),
                       ),
                     ),
                   ],
@@ -1118,7 +1118,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                     const Expanded(
                       child: Text(
                         "Meet in safe campus locations for peace of mind",
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 20),
                       ),
                     ),
                   ],
@@ -2110,7 +2110,7 @@ class SATeamMember {
 
 // Team members data - same as in sa_library_page.dart
 final List<SATeamMember> _saTeamMembers = [
-  SATeamMember(
+  const SATeamMember(
     id: 'sa1',
     name: 'Alisa',
     specialty: 'Anxiety & Stress',
@@ -2122,7 +2122,7 @@ final List<SATeamMember> _saTeamMembers = [
       "Would you like to learn some breathing techniques that can help in moments of stress?",
     ],
   ),
-  SATeamMember(
+  const SATeamMember(
     id: 'sa2',
     name: 'Rohan',
     specialty: 'Peer Support',
@@ -2134,7 +2134,7 @@ final List<SATeamMember> _saTeamMembers = [
       "Would you like to share what's been on your mind lately?",
     ],
   ),
-  SATeamMember(
+  const SATeamMember(
     id: 'sa3',
     name: 'Misha',
     specialty: 'Academic Pressure',

@@ -675,7 +675,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             padding: const EdgeInsets.only(left: 16, top: 4),
                             child: Text(
                               _userResponses[index]['answer'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.deepPurple,
                                 fontSize: 14,
                               ),

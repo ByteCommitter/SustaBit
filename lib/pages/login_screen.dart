@@ -53,7 +53,7 @@ class LoginScreen extends StatelessWidget {
               
               // Google Sign In Button (Dummy button)
               ElevatedButton(
-                onPressed: () => Get.off(() => OnboardingScreen()),
+                onPressed: () => Get.off(() => const OnboardingScreen()),
                 //onPressed: () => _dummySignIn(),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.black,
@@ -64,7 +64,7 @@ class LoginScreen extends StatelessWidget {
                     side: const BorderSide(color: Colors.grey),
                   ),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Google logo icon
@@ -77,8 +77,8 @@ class LoginScreen extends StatelessWidget {
                         size: 24,
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    const Text(
+                    SizedBox(width: 16),
+                    Text(
                       'Continue with Google',
                       style: TextStyle(fontSize: 16),
                     ),

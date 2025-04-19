@@ -38,12 +38,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: BaseScreen(), // Changed from AuthWrapper() to BaseScreen() for testing
+      home: AuthWrapper(), // Changed from AuthWrapper() to BaseScreen() for testing
       // Add routes for direct navigation
       getPages: [
         GetPage(name: '/', page: () => AuthWrapper()),
-        GetPage(name: '/onboarding', page: () => OnboardingScreen()),
-        GetPage(name: '/home', page: () => BaseScreen()),
+        GetPage(name: '/onboarding', page: () => const OnboardingScreen()),
+        GetPage(name: '/home', page: () => const BaseScreen()),
         GetPage(name: '/guide', page: () => const GuidePage()),
       ],
     );

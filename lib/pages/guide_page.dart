@@ -263,11 +263,11 @@ class GuidePage extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(12),
             color: Colors.deepPurple.withOpacity(0.1),
-            child: Row(
+            child: const Row(
               children: [
-                const Icon(Icons.lightbulb, color: Colors.amber),
-                const SizedBox(width: 12),
-                const Expanded(
+                Icon(Icons.lightbulb, color: Colors.amber),
+                SizedBox(width: 12),
+                Expanded(
                   child: Text(
                     'Team members have expertise in areas like anxiety, academic pressure, grief, relationships, and more.',
                     style: TextStyle(fontStyle: FontStyle.italic),
@@ -349,11 +349,11 @@ class GuidePage extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(12),
             color: Colors.amber.withOpacity(0.1),
-            child: Row(
+            child: const Row(
               children: [
-                const Icon(Icons.lightbulb, color: Colors.amber),
-                const SizedBox(width: 12),
-                const Expanded(
+                Icon(Icons.lightbulb, color: Colors.amber),
+                SizedBox(width: 12),
+                Expanded(
                   child: Text(
                     'Achievement levels increase as you continue to engage with different aspects of wellness and sustainability!',
                     style: TextStyle(fontStyle: FontStyle.italic),
@@ -499,7 +499,7 @@ class GuidePage extends StatelessWidget {
           Container(
             width: 22,
             height: 22,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.deepPurple,
               shape: BoxShape.circle,
             ),

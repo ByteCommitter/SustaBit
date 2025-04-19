@@ -136,7 +136,7 @@ class SALibraryPage extends StatelessWidget {
 // Use the team members from community_page.dart
 final List<SATeamMember> _saTeamMembers = [
   // Same definitions as in community_page.dart
-  SATeamMember(
+  const SATeamMember(
     id: 'sa1',
     name: 'Alisa',
     specialty: 'Anxiety & Stress',
@@ -148,7 +148,7 @@ final List<SATeamMember> _saTeamMembers = [
       "Would you like to learn some breathing techniques that can help in moments of stress?",
     ],
   ),
-  SATeamMember(
+  const SATeamMember(
     id: 'sa2',
     name: 'Rohan',
     specialty: 'Peer Support',
@@ -160,7 +160,7 @@ final List<SATeamMember> _saTeamMembers = [
       "Would you like to share what's been on your mind lately?",
     ],
   ),
-  SATeamMember(
+  const SATeamMember(
     id: 'sa3',
     name: 'Misha',
     specialty: 'Academic Pressure',

@@ -408,7 +408,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 12),
               
               // FIXED: Completely redesigned event list to prevent overflow
-              Container(
+              SizedBox(
                 height: 200, // Fixed, smaller height
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
