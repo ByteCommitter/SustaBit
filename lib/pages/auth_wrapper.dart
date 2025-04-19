@@ -1,30 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import '../services/auth_service.dart';
-import 'login_screen.dart';
+import 'onboarding_screen.dart';
+import 'base_widget.dart';
 
 class AuthWrapper extends StatelessWidget {
   final AuthService _authService = AuthService();
-
+  
   AuthWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // For development purposes, directly return the main app screen
+    return const BaseScreen(); 
+    
+    // When you need to implement actual auth, use this:
+    /*
     return StreamBuilder<User?>(
-      stream: _authService.authStateChanges,
+      stream: _authService.userStream,
       builder: (context, snapshot) {
-        // If we're still waiting for the auth state, show loading
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+        if (snapshot.connectionState == ConnectionState.active) {
+          final user = snapshot.data;
+          if (user == null) {
+            return OnboardingScreen();
+          } else {
+            return const BaseScreen();
+          }
         }
-
-        // For development, let's always start at the login screen
-        return LoginScreen();
+        
+        // While waiting for connection, show loading
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
       },
     );
+    */
   }
 }

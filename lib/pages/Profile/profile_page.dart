@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mentalsustainability/pages/onboarding_screen.dart';
-import '../../models/profile_model.dart';
-import '../../services/profile_service.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -12,425 +9,436 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final ProfileService _profileService = ProfileService();
-  late Future<ProfileModel> _profileFuture;
-  final TextEditingController _usernameController = TextEditingController();
+  // Mock user data
+  final Map<String, dynamic> _userData = {
+    'name': 'Alex Johnson',
+    'email': 'alex.johnson@example.com',
+    'joinDate': 'March 2023',
+    'points': 1250,
+    'completedQuests': 42,
+    'achievements': ['Eco Warrior', 'Mindfulness Master', 'Community Leader'],
+    'interests': ['Meditation', 'Sustainability', 'Mental Health'],
+    'avatarColor': Colors.deepPurple,
+  };
+
+  // For editing profile
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
-    _loadProfile();
-  }
-
-  void _loadProfile() {
-    _profileFuture = _profileService.getUserProfile();
+    _nameController = TextEditingController(text: _userData['name']);
+    _emailController = TextEditingController(text: _userData['email']);
   }
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
-  void _showChangeUsernameDialog(ProfileModel profile) {
-    if (!profile.canChangeAnonymousUsername()) {
-      Get.snackbar(
-        'Cannot Change Username',
-        'You can only change your anonymous username once every 7 days. '
-        '${profile.daysUntilUsernameChangeAllowed()} days remaining.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange.withOpacity(0.1),
-        colorText: Colors.orange[800],
-      );
-      return;
-    }
-
-    _usernameController.text = profile.anonymousUsername;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Change Anonymous Username'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'You can only change your anonymous username once every 7 days.',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(
-                labelText: 'New Anonymous Username',
-                border: OutlineInputBorder(),
-              ),
-              maxLength: 20,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final newUsername = _usernameController.text.trim();
-              if (newUsername.isEmpty) {
-                Get.snackbar(
-                  'Error',
-                  'Username cannot be empty',
-                  snackPosition: SnackPosition.BOTTOM,
-                );
-                return;
-              }
-
-              final success = await _profileService.updateAnonymousUsername(newUsername);
-              Navigator.pop(context);
-
-              if (success) {
-                setState(() {
-                  _loadProfile();
-                });
-                Get.snackbar(
-                  'Success',
-                  'Anonymous username updated successfully',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.green.withOpacity(0.1),
-                  colorText: Colors.green[800],
-                );
-              } else {
-                Get.snackbar(
-                  'Error',
-                  'Failed to update anonymous username',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.red.withOpacity(0.1),
-                  colorText: Colors.red[800],
-                );
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Add method to navigate to the onboarding quiz
-  void _navigateToOnboardingQuiz() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Retake Onboarding Quiz'),
-        content: const Text(
-          'Would you like to retake the onboarding quiz? This will help us refine your personalized recommendations based on your current preferences and goals.',
-          style: TextStyle(fontSize: 14),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Not Now'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // Navigate to onboarding and replace the current page
-              Get.to(() => OnboardingScreen(), fullscreenDialog: true);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Start Quiz'),
-          ),
-        ],
-      ),
-    );
+  void _toggleEditMode() {
+    setState(() {
+      if (_isEditing) {
+        // Save changes
+        if (_formKey.currentState!.validate()) {
+          _userData['name'] = _nameController.text;
+          _userData['email'] = _emailController.text;
+          
+          Get.snackbar(
+            'Profile Updated',
+            'Your profile information has been updated successfully.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green[100],
+            colorText: Colors.green[800],
+            margin: const EdgeInsets.all(16),
+            borderRadius: 8,
+            duration: const Duration(seconds: 3),
+          );
+        } else {
+          // Return without toggling if validation fails
+          return;
+        }
+      } else {
+        // Reset controllers when entering edit mode
+        _nameController.text = _userData['name'];
+        _emailController.text = _userData['email'];
+      }
+      _isEditing = !_isEditing;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<ProfileModel>(
-        future: _profileFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          // If there's an error or no data, we'll still show a hardcoded profile
-          final ProfileModel profile = snapshot.hasData 
-              ? snapshot.data!
-              : ProfileModel(
-                  id: 'default123',
-                  displayName: 'Jamie Smith',
-                  email: 'jamie.smith@example.com',
-                  age: 24,
-                  anonymousUsername: 'CalmMind88',
-                  lifetimePoints: 950,
-                  badges: [
-                    UserBadge(
-                      id: 'default1',
-                      name: 'New User',
-                      description: 'Joined the app',
-                      iconPath: 'assets/images/badges/newuser.png',
-                      earnedDate: DateTime.now().subtract(const Duration(days: 1)),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Profile header
+            _buildProfileHeader(),
+            
+            const SizedBox(height: 24),
+            
+            // Profile info
+            _isEditing ? _buildEditForm() : _buildProfileInfo(),
+            
+            const SizedBox(height: 24),
+            
+            // Statistics section
+            _buildStatisticsSection(),
+            
+            const SizedBox(height: 24),
+            
+            // Achievements section
+            _buildAchievementsSection(),
+            
+            const SizedBox(height: 24),
+            
+            // Interests section
+            _buildInterestsSection(),
+            
+            const SizedBox(height: 36),
+            
+            // Temporarily hidden logout button - remove Firebase dependency
+            // Center(
+            //   child: ElevatedButton.icon(
+            //     onPressed: _signOut,
+            //     icon: const Icon(Icons.logout),
+            //     label: const Text('Sign Out'),
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.red[400],
+            //       foregroundColor: Colors.white,
+            //       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            //     ),
+            //   ),
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildProfileHeader() {
+    return Row(
+      children: [
+        // Avatar
+        CircleAvatar(
+          radius: 40,
+          backgroundColor: _userData['avatarColor'],
+          child: Text(
+            _userData['name'].substring(0, 1).toUpperCase(),
+            style: const TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        const SizedBox(width: 20),
+        
+        // Name and points
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _userData['name'],
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(Icons.stars, color: Colors.amber, size: 20),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${_userData['points']} points',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.deepPurple,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                );
-
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        
+        // Edit button
+        IconButton(
+          onPressed: _toggleEditMode,
+          icon: Icon(
+            _isEditing ? Icons.save : Icons.edit,
+            color: Colors.deepPurple,
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildProfileInfo() {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Profile Information',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildInfoRow(Icons.email, 'Email', _userData['email']),
+            const SizedBox(height: 12),
+            _buildInfoRow(Icons.calendar_today, 'Member Since', _userData['joinDate']),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildEditForm() {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Edit Profile',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Name field
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              
+              // Email field
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  prefixIcon: Icon(Icons.email),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!GetUtils.isEmail(value)) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Save button
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  onPressed: _toggleEditMode,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Save Changes'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: Colors.deepPurple),
+        const SizedBox(width: 8),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+              ),
+            ),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildStatisticsSection() {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Statistics',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                // Profile header with avatar and basic info
-                Container(
-                  width: double.infinity, // Make container take full width
-                  padding: const EdgeInsets.all(20),
-                  color: Colors.deepPurple.withOpacity(0.1),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center, // Center the contents horizontally
-                    children: [
-                      // Avatar
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.deepPurple.withOpacity(0.2),
-                        backgroundImage: profile.photoURL != null 
-                            ? NetworkImage(profile.photoURL!) 
-                            : null,
-                        child: profile.photoURL == null
-                            ? const Icon(Icons.person, size: 50, color: Colors.deepPurple)
-                            : null,
-                      ),
-                      const SizedBox(height: 16),
-                      
-                      // Display name
-                      Text(
-                        profile.displayName,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center, // Center align text
-                      ),
-                      
-                      // Email
-                      Text(
-                        profile.email,
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                        ),
-                        textAlign: TextAlign.center, // Center align text
-                      ),
-                      
-                      // Age
-                      Text(
-                        'Age: ${profile.age}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center, // Center align text
-                      ),
-                    ],
-                  ),
-                ),
-                
-                // Anonymous username section
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Anonymous Username',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            profile.anonymousUsername,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          ElevatedButton.icon(
-                            onPressed: () => _showChangeUsernameDialog(profile),
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white, // Make the icon white
-                            ),
-                            label: const Text(
-                              'Change',
-                              style: TextStyle(color: Colors.white), // Ensure text is also white
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: profile.canChangeAnonymousUsername()
-                                  ? Colors.deepPurple
-                                  : Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (!profile.canChangeAnonymousUsername())
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            'You can change your username in ${profile.daysUntilUsernameChangeAllowed()} days',
-                            style: TextStyle(
-                              color: Colors.orange[800],
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                
-                const Divider(),
-                
-                // Lifetime points
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Lifetime Points',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.deepPurple,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          profile.lifetimePoints.toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                const Divider(),
-                
-                // Add Retake Onboarding Quiz button
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'App Preferences',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Card(
-                        elevation: 1,
-                        child: ListTile(
-                          leading: const Icon(Icons.quiz, color: Colors.deepPurple),
-                          title: const Text('Retake Onboarding Quiz'),
-                          subtitle: const Text('Update your preferences and goals'),
-                          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                          onTap: _navigateToOnboardingQuiz,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                const Divider(),
-                
-                // Achievements/Badges
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Achievements',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      
-                      // Display badges in a grid
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1.5,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                        ),
-                        itemCount: profile.badges.length,
-                        itemBuilder: (context, index) {
-                          final badge = profile.badges[index];
-                          return Card(
-                            elevation: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Use a placeholder icon until badge images are available
-                                  Icon(
-                                    Icons.emoji_events,
-                                    color: Colors.amber,
-                                    size: 32,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    badge.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    badge.description,
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.grey,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+                _buildStatItem(Icons.task_alt, 'Quests\nCompleted', _userData['completedQuests'].toString()),
+                _buildStatItem(Icons.stars, 'Total\nPoints', _userData['points'].toString()),
+                _buildStatItem(Icons.emoji_events, 'Achievements', _userData['achievements'].length.toString()),
               ],
             ),
-          );
-        },
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildStatItem(IconData icon, String label, String value) {
+    return Column(
+      children: [
+        Icon(icon, size: 28, color: Colors.deepPurple),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.deepPurple,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildAchievementsSection() {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Achievements',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _userData['achievements']
+                  .map<Widget>((achievement) => Chip(
+                        avatar: const Icon(Icons.emoji_events, color: Colors.amber, size: 16),
+                        label: Text(achievement),
+                        backgroundColor: Colors.amber.withOpacity(0.1),
+                      ))
+                  .toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildInterestsSection() {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Interests',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _userData['interests']
+                  .map<Widget>((interest) => Chip(
+                        avatar: const Icon(Icons.favorite, color: Colors.deepPurple, size: 16),
+                        label: Text(interest),
+                        backgroundColor: Colors.deepPurple.withOpacity(0.1),
+                      ))
+                  .toList(),
+            ),
+          ],
+        ),
       ),
     );
   }

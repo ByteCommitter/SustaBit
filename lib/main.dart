@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:mentalsustainability/pages/base_widget.dart';
-import 'firebase_options.dart';
+// import 'package:firebase_core/firebase_core.dart'; // Comment out Firebase imports
+// import 'firebase_options.dart'; // Comment out Firebase options
 import 'package:get/get.dart';
+import 'package:mentalsustainability/pages/base_widget.dart';
 import 'pages/auth_wrapper.dart';
 import 'pages/onboarding_screen.dart';
 import 'pages/Home/home_page.dart';
@@ -10,7 +10,8 @@ import 'pages/Home/home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Add error handling for Firebase initialization
+  // Comment out Firebase initialization since you're not using it
+  /*
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -18,8 +19,8 @@ void main() async {
     print('Firebase initialized successfully');
   } catch (e) {
     print('Error initializing Firebase: $e');
-    // We still continue with the app, but some features might not work
   }
+  */
   
   runApp(const MyApp());
 }

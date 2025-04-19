@@ -1,11 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import '../models/profile_model.dart';
 
 class ProfileService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   // Get current user profile - HARDCODED VERSION
   Future<ProfileModel> getUserProfile() async {
     // Simply return hardcoded profile data without checking authentication

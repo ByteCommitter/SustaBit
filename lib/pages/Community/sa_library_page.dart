@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'sa_chat_page.dart';
+import 'community_page.dart'; // Add this import
 
 class SALibraryPage extends StatelessWidget {
   const SALibraryPage({super.key});
@@ -57,26 +58,27 @@ class SALibraryPage extends StatelessWidget {
           // Bookshelf
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(30),
+              padding: const EdgeInsets.all(30),
+              // Fixed decoration with solid color
               decoration: BoxDecoration(
-              
-                image: DecorationImage(
-                  image: AssetImage('assets/images/wooden_shelf.png'),
-                  fit: BoxFit.cover
-                  //colorFilter: ColorFilter.mode(
-                  //   Colors.brown.withOpacity(0.7),
-                  //   BlendMode.color,
-                  // ),
+                color: Colors.brown.withOpacity(0.2),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.brown.withOpacity(0.1),
+                    Colors.brown.withOpacity(0.3),
+                  ],
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 30.0), // Increased padding to center books more
+                padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 30.0),
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    childAspectRatio: 0.7, // Adjusted aspect ratio for smaller books
-                    crossAxisSpacing: 30, // Increased spacing between books horizontally
-                    mainAxisSpacing: 40, // Increased vertical spacing 
+                    childAspectRatio: 0.7,
+                    crossAxisSpacing: 30,
+                    mainAxisSpacing: 40,
                   ),
                   itemCount: _saTeamMembers.length,
                   itemBuilder: (context, index) {
@@ -93,67 +95,47 @@ class SALibraryPage extends StatelessWidget {
   }
 
   Widget _buildBookItem(BuildContext context, SATeamMember member) {
-  return GestureDetector(
-    onTap: () {
-      // Navigate to chat with this team member
-      Get.to(() => SAChatPage(teamMember: member));
-    },
-    child: Container(
-      // REDUCED HEIGHT AND WIDTH: Made container size even smaller
-      height: 50, 
-      width: 20,
-      
-      decoration: BoxDecoration(
-        color: member.bookColor,
-        borderRadius: BorderRadius.circular(2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 2,
-            offset: const Offset(1, 1),
+    return GestureDetector(
+      onTap: () {
+        // Navigate to chat with this team member
+        Get.to(() => SAChatPage(teamMember: member));
+      },
+      child: Container(
+        height: 50, 
+        width: 20,
+        decoration: BoxDecoration(
+          color: member.bookColor,
+          borderRadius: BorderRadius.circular(2),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 2,
+              offset: const Offset(1, 1),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            member.name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+            textAlign: TextAlign.center,
           ),
-        ],
-      ),
-      child: Center(
-        child: Text(
-          member.name,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-          ),
-          textAlign: TextAlign.center,
         ),
       ),
-    ),
-  );
-}
-}
-
-// Model class for SA team members
-class SATeamMember {
-  final String id;
-  final String name;
-  final String specialty;
-  final String bio;
-  final Color bookColor;
-  final List<String> presetMessages;
-
-  const SATeamMember({
-    required this.id,
-    required this.name,
-    required this.specialty,
-    required this.bio,
-    required this.bookColor,
-    required this.presetMessages,
-  });
+    );
+  }
 }
 
-// Updated SA team members with 5-letter names
+// Use the team members from community_page.dart
 final List<SATeamMember> _saTeamMembers = [
+  // Same definitions as in community_page.dart
   SATeamMember(
     id: 'sa1',
-    name: 'Alisa', // 5-letter name
+    name: 'Alisa',
     specialty: 'Anxiety & Stress',
     bio: 'Peer supporter with experience helping fellow students manage anxiety and stress.',
     bookColor: Colors.deepPurple,
@@ -165,7 +147,7 @@ final List<SATeamMember> _saTeamMembers = [
   ),
   SATeamMember(
     id: 'sa2',
-    name: 'Rohan', // 5-letter name
+    name: 'Rohan',
     specialty: 'Peer Support',
     bio: 'Student who has personal experience with overcoming depression and wants to help others.',
     bookColor: Colors.teal,
@@ -177,7 +159,7 @@ final List<SATeamMember> _saTeamMembers = [
   ),
   SATeamMember(
     id: 'sa3',
-    name: 'Misha', // 5-letter name
+    name: 'Misha',
     specialty: 'Academic Pressure',
     bio: 'Student mentor specializing in helping peers navigate academic stress and expectations.',
     bookColor: Colors.indigo,
@@ -189,7 +171,7 @@ final List<SATeamMember> _saTeamMembers = [
   ),
   SATeamMember(
     id: 'sa4',
-    name: 'Jorge', // 5-letter name
+    name: 'Jorge',
     specialty: 'Grief & Loss',
     bio: 'Peer supporter trained to help individuals process grief and navigate significant life changes.',
     bookColor: Colors.amber.shade800,
@@ -201,7 +183,7 @@ final List<SATeamMember> _saTeamMembers = [
   ),
   SATeamMember(
     id: 'sa5',
-    name: 'Neela', // 5-letter name
+    name: 'Neela',
     specialty: 'Cultural Adaptation',
     bio: 'International student who helps peers navigate cultural transitions and identity challenges.',
     bookColor: Colors.pink.shade700,
@@ -213,7 +195,7 @@ final List<SATeamMember> _saTeamMembers = [
   ),
   SATeamMember(
     id: 'sa6',
-    name: 'Danny', // 5-letter name
+    name: 'Danny',
     specialty: 'LGBTQ+ Support',
     bio: 'Student advocate for LGBTQ+ peers, focusing on identity, acceptance, and community building.',
     bookColor: Colors.blue.shade800,
@@ -225,7 +207,7 @@ final List<SATeamMember> _saTeamMembers = [
   ),
   SATeamMember(
     id: 'sa7',
-    name: 'Layla', // 5-letter name
+    name: 'Layla',
     specialty: 'Relationship Issues',
     bio: 'Peer supporter trained in interpersonal relationships, communication skills, and boundary setting.',
     bookColor: Colors.red.shade700,
@@ -237,7 +219,7 @@ final List<SATeamMember> _saTeamMembers = [
   ),
   SATeamMember(
     id: 'sa8',
-    name: 'Kevin', // 5-letter name
+    name: 'Kevin',
     specialty: 'Substance Use',
     bio: 'Student who provides non-judgmental support for peers dealing with substance use concerns.',
     bookColor: Colors.green.shade800,
@@ -249,7 +231,7 @@ final List<SATeamMember> _saTeamMembers = [
   ),
   SATeamMember(
     id: 'sa9',
-    name: 'Sonia', // 5-letter name
+    name: 'Sonia',
     specialty: 'Self-Esteem',
     bio: 'Peer mentor focused on building self-worth, resilience, and personal strengths.',
     bookColor: Colors.purple.shade800,

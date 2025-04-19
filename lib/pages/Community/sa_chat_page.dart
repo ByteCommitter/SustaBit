@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'sa_library_page.dart';
+import 'community_page.dart';
 
 class SAChatPage extends StatefulWidget {
   final SATeamMember teamMember;

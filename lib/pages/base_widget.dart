@@ -24,6 +24,9 @@ class _BaseScreenState extends State<BaseScreen> {
   int _selectedIndex = 0;
   
   void _onItemTapped(int index) {
+    // Limit index to 0-2 since we've temporarily removed Profile tab
+    if (index > 2) return;
+    
     setState(() {
       _selectedIndex = index;
     });
@@ -35,28 +38,23 @@ class _BaseScreenState extends State<BaseScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "R N T",
-              style: TextStyle(
-                color: Colors.deepPurple, 
-                fontWeight: FontWeight.w600
-              ),
-            ),
-          ],
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: Colors.deepPurple),
+          onPressed: () {
+            // Drawer functionality will be added later
+          },
         ),
+        title: null, // No title in the middle
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.logout, color: Colors.deepPurple),
-        //     onPressed: () async {
-        //       await _authService.signOut();
-        //     },
-        //   )
-        // ],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline, color: Colors.deepPurple),
+            onPressed: () {
+              // Question mark functionality will be added later
+            },
+          )
+        ],
       ),
 
       body: IndexedStack(
@@ -72,7 +70,7 @@ class _BaseScreenState extends State<BaseScreen> {
           const CommunityPage(),
           
           // Profile Page
-          const ProfilePage(),
+          //const ProfilePage(),
         ],
       ),
       
@@ -111,12 +109,14 @@ class _BaseScreenState extends State<BaseScreen> {
             label: 'Community',
           ),
           
-          // Profile
+          // Profile - temporarily commented out
+          /* 
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline_outlined),
+            icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
             label: 'Profile',
           ),
+          */
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
