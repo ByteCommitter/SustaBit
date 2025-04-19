@@ -4,6 +4,7 @@ import '../services/auth_service.dart';
 import 'Profile/profile_page.dart';
 import 'Community/community_page.dart';
 import 'Quests/quest_page.dart';
+import 'package:mentalsustainability/pages/guide_page.dart';
 
 class BaseScreen extends StatefulWidget{
   const BaseScreen({super.key});
@@ -101,9 +102,12 @@ class _BaseScreenState extends State<BaseScreen> {
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline_rounded , color: Colors.deepPurple,size: 32,),
+            icon: const Icon(Icons.help_outline_rounded , color: Colors.deepPurple, size: 32),
             onPressed: () {
-              // Question mark functionality will be added later
+              // Navigate to the guide page when help icon is tapped
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const GuidePage())
+              );
             },
           )
         ],

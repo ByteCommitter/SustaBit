@@ -471,19 +471,22 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
             flex: 5,
             child: Row(
               children: [
-                // Left decorative column
-                _buildBookshelfColumn(),
+                // Left decorative column - narrower
+                _buildBookshelfColumn(15),
                 
                 // Books section with proper spacing
                 Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: rowMembers.map((member) => _buildBook(member)).toList(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: rowMembers.map((member) => _buildBook(member)).toList(),
+                    ),
                   ),
                 ),
                 
-                // Right decorative column
-                _buildBookshelfColumn(),
+                // Right decorative column - narrower
+                _buildBookshelfColumn(15),
               ],
             ),
           ),
@@ -512,10 +515,10 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
     );
   }
   
-  // Helper method to build decorative column
-  Widget _buildBookshelfColumn() {
+  // Helper method to build decorative column with customizable width
+  Widget _buildBookshelfColumn(double width) {
     return Container(
-      width: 20,
+      width: width,
       decoration: BoxDecoration(
         color: Colors.brown.shade900,
         boxShadow: [
@@ -532,14 +535,14 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
   // Helper method to build an individual book with horizontal text
   Widget _buildBook(SATeamMember member) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
       child: GestureDetector(
         onTap: () {
           // Navigate to chat with this team member
           Get.to(() => SAChatPage(teamMember: member));
         },
         child: Container(
-          width: 80,
+          width: 65, // Reduced from 80
           // Reduce height to fix overflow by adding negative bottom margin
           margin: const EdgeInsets.only(bottom: 34),
           height: double.infinity,
@@ -561,7 +564,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
           ),
           child: Center(
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
               color: Colors.black38,
               width: double.infinity,
               child: Text(
@@ -569,7 +572,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 14, // Reduced from 16
                 ),
                 textAlign: TextAlign.center,
               ),

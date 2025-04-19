@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // import 'firebase_options.dart'; // Comment out Firebase options
 import 'package:get/get.dart';
 import 'package:mentalsustainability/pages/base_widget.dart';
+import 'package:mentalsustainability/pages/guide_page.dart';
 import 'pages/auth_wrapper.dart';
 import 'pages/onboarding_screen.dart';
 import 'pages/Home/home_page.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/', page: () => AuthWrapper()),
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),
         GetPage(name: '/home', page: () => BaseScreen()),
+        GetPage(name: '/guide', page: () => const GuidePage()),
       ],
     );
   }
