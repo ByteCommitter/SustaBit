@@ -93,66 +93,41 @@ class SALibraryPage extends StatelessWidget {
   }
 
   Widget _buildBookItem(BuildContext context, SATeamMember member) {
-    return GestureDetector(
-      onTap: () {
-        // Navigate to chat with this team member
-        Get.to(() => SAChatPage(teamMember: member));
-      },
-      child: Container(
-        // REDUCED HEIGHT AND WIDTH: Made container size even smaller
-        height: 50, // Further reduced from 40 to 30
-        width: 20,  // Keeping width the same
-        
-        decoration: BoxDecoration(
-          color: member.bookColor,
-          borderRadius: BorderRadius.circular(2),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2), // Lighter shadow
-              blurRadius: 2,
-              offset: const Offset(1, 1),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Book title (horizontal)
-            Expanded(
-              child: Center(
-                child: Text(
-                  member.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12, // Slightly smaller font
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            
-            // Book subject - smaller
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1), // Even smaller padding
-              alignment: Alignment.center,
-              color: Colors.black26,
-              child: Text(
-                member.specialty,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 6, // Even smaller font
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
+  return GestureDetector(
+    onTap: () {
+      // Navigate to chat with this team member
+      Get.to(() => SAChatPage(teamMember: member));
+    },
+    child: Container(
+      // REDUCED HEIGHT AND WIDTH: Made container size even smaller
+      height: 50, 
+      width: 20,
+      
+      decoration: BoxDecoration(
+        color: member.bookColor,
+        borderRadius: BorderRadius.circular(2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 2,
+            offset: const Offset(1, 1),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Text(
+          member.name,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+          textAlign: TextAlign.center,
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 // Model class for SA team members
