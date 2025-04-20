@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 import 'package:mentalsustainability/pages/Community/community_page.dart';
 
 class QuestPage extends StatefulWidget {
@@ -87,8 +88,8 @@ class _QuestPageState extends State<QuestPage> {
         'Quest Added',
         'Your quest has been added successfully!',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green[100], // Solid light green background
-        colorText: Colors.green[800], // Dark green text for contrast
+        backgroundColor: AppColors.success.withOpacity(0.1), // Use theme color
+        colorText: AppColors.success, // Use theme color
         margin: const EdgeInsets.all(16),
         borderRadius: 8,
         duration: const Duration(seconds: 3),
@@ -120,8 +121,8 @@ class _QuestPageState extends State<QuestPage> {
       'Quest Added',
       'The suggested quest has been added to your active quests!',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green[100], // Solid light green background
-      colorText: Colors.green[800], // Dark green text for contrast
+      backgroundColor: AppColors.success.withOpacity(0.1), // Use theme color
+      colorText: AppColors.success, // Use theme color
       margin: const EdgeInsets.all(16),
       borderRadius: 8,
       duration: const Duration(seconds: 3),
@@ -139,8 +140,8 @@ class _QuestPageState extends State<QuestPage> {
       'Quest Deleted',
       'Quest has been removed from your list',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.red[100], // Solid light red background
-      colorText: Colors.red[800], // Dark red text for contrast
+      backgroundColor: AppColors.error.withOpacity(0.1), // Use theme color
+      colorText: AppColors.error, // Use theme color
       margin: const EdgeInsets.all(16),
       borderRadius: 8,
       duration: const Duration(seconds: 3),
@@ -180,8 +181,8 @@ class _QuestPageState extends State<QuestPage> {
                   'Quest Completed',
                   'Well done! You\'ve earned 10 points!',
                   snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.blue[100], 
-                  colorText: Colors.blue[800],
+                  backgroundColor: AppColors.info.withOpacity(0.1), // Use theme color
+                  colorText: AppColors.info, // Use theme color
                   margin: const EdgeInsets.all(16),
                   borderRadius: 8,
                   duration: const Duration(seconds: 3),
@@ -189,7 +190,7 @@ class _QuestPageState extends State<QuestPage> {
               },
               child: const Text('Just Complete'),
             ),
-            ElevatedButton(  // Changed from TextButton to ElevatedButton for emphasis
+            ElevatedButton(  
               onPressed: () {
                 // Mark as complete and share
                 setState(() {
@@ -203,14 +204,178 @@ class _QuestPageState extends State<QuestPage> {
                 ));
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
+                backgroundColor: AppColors.primary, // Use theme color
+                foregroundColor: AppColors.white, // Use theme color
               ),
-              child: const Text('Share & Complete'),  // Fixed button text
+              child: const Text('Share & Complete'),
             ),
           ],
         ),
       );
     }
+  }
+
+  // Show dialog to create a new quest
+  void _showAddQuestDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Create New Quest',
+          style: TextStyle(
+            color: AppColors.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: TextField(
+          controller: _questController,
+          decoration: InputDecoration(
+            hintText: 'Enter your quest title',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.primary.withOpacity(0.3)),
+            ),
+            filled: true,
+            fillColor: AppColors.cardBackground,
+            contentPadding: const EdgeInsets.all(16),
+          ),
+          maxLines: 2,
+          textCapitalization: TextCapitalization.sentences,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel', 
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _addQuest(_questController.text);
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Add Quest'),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  // Show suggestions dialog
+  void _showSuggestionsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Quest Suggestions',
+          style: TextStyle(
+            color: AppColors.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: _personalizedQuests.isEmpty
+            ? Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.notifications_off,
+                      size: 48,
+                      color: AppColors.textSecondary.withOpacity(0.5),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No suggestions available',
+                      style: TextStyle(color: AppColors.textSecondary),
+                    ),
+                    Text(
+                      'Check back later!',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                itemCount: _personalizedQuests.length,
+                itemBuilder: (context, index) {
+                  final quest = _personalizedQuests[index];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(12),
+                      leading: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.warning.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.lightbulb,
+                          color: AppColors.warning,
+                          size: 24,
+                        ),
+                      ),
+                      title: Text(
+                        quest.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(quest.description),
+                          const SizedBox(height: 8),
+                          Text(
+                            "${quest.points} points",
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      isThreeLine: true,
+                      trailing: IconButton(
+                        onPressed: () {
+                          _addSuggestedQuest(quest);
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.add_circle,
+                          color: AppColors.primary,
+                        ),
+                        tooltip: 'Add to My Quests',
+                      ),
+                    ),
+                  );
+                },
+              ),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
+            ),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -228,270 +393,152 @@ class _QuestPageState extends State<QuestPage> {
     
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 80.0), // Add bottom padding for FAB
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // More compact header section
+            // Header section with progress
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Quests',
-                  style: TextStyle(
-                    fontSize: 20, // Reduced font size from 24
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), // Smaller padding
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8), // Smaller radius
-                  ),
-                  child: Text(
-                    '${(progressPercentage * 100).toInt()}% Complete',
-                    style: const TextStyle(
-                      fontSize: 11, // Smaller font
-                      fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4), // Reduced space
-            
-            // More compact progress bar
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                LinearProgressIndicator(
-                  value: progressPercentage,
-                  backgroundColor: Colors.grey[200],
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
-                  minHeight: 6, // Reduced from 10 to 6
-                  borderRadius: BorderRadius.circular(3), // Smaller radius
-                ),
-                const SizedBox(height: 2), // Reduced from 4 to 2
-                Text(
-                  '$completedQuests of $totalQuests quests completed',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 10, // Reduced from 12 to 10
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 8), // Reduced spacing
-            
-            // Add new quest section
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(10), // Reduced padding further
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Add Your Own Quest',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14, // Reduced font size
-                      ),
-                    ),
-                    const SizedBox(height: 6), // Reduced spacing
-                    TextField(
-                      controller: _questController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter a new quest',
-                        isDense: true, // More compact TextField
-                        contentPadding: const EdgeInsets.all(10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                        suffixIcon: IconButton(
-                          onPressed: () => _addQuest(_questController.text),
-                          icon: const Icon(Icons.add_circle, size: 20), // Smaller icon
-                          color: Colors.deepPurple,
-                          padding: EdgeInsets.zero, // No padding for icon
-                          constraints: const BoxConstraints(), // Minimize constraints
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'My Quests',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            
-            const SizedBox(height: 12), // Reduced spacing
-            
-            // Active quests section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'My Active Quests',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                      const SizedBox(height: 4),
+                      // Progress text and bar
+                      Row(
+                        children: [
+                          Text(
+                            '$completedQuests of $totalQuests completed',
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '${(progressPercentage * 100).toInt()}%',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                // Add scroll indicator text
-                Text(
-                  'Scroll to see all',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                    fontStyle: FontStyle.italic,
+                
+                // Suggestions button - replaces the large box at the bottom
+                OutlinedButton.icon(
+                  onPressed: _showSuggestionsDialog,
+                  icon: Icon(Icons.lightbulb_outline, color: AppColors.warning),
+                  label: const Text("View Suggestions"),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: BorderSide(color: AppColors.primary.withOpacity(0.5)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8), // Reduced spacing
+            
+            const SizedBox(height: 8),
+            
+            // Progress bar
+            LinearProgressIndicator(
+              value: progressPercentage,
+              backgroundColor: AppColors.cardBackground,
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              minHeight: 6,
+              borderRadius: BorderRadius.circular(3),
+            ),
+            
+            const SizedBox(height: 16),
             
             // List of active quests
             Expanded(
-              flex: 4, // Increased flex to give more space to active quests
               child: _activeQuests.isEmpty
-                  ? Center(
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.hourglass_empty, size: 40, color: Colors.grey),
-                            SizedBox(height: 8),
-                            Text(
-                              'No active quests yet',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            Text(
-                              'Add one above or from suggestions below',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : ListView.builder( // Replaced the ShaderMask with a simple ListView
-                      itemCount: _activeQuests.length,
-                      padding: const EdgeInsets.only(bottom: 8),
-                      itemBuilder: (context, index) {
-                        final quest = _activeQuests[index];
-                        return _buildQuestCard(
-                          quest,
-                          onVerify: () => _verifyQuest(quest.id),
-                          onDelete: () => _deleteQuest(quest.id),
-                        );
-                      },
-                    ),
-            ),
-            
-            const SizedBox(height: 16), // Increased spacing to move suggestions box lower
-            
-            // Personalized suggestions section - now in a box with reduced height
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.amber.withOpacity(0.05),
-                border: Border.all(
-                  color: Colors.amber.withOpacity(0.3),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(8), // Reduced padding to prevent overflow
-              child: Column(
-                mainAxisSize: MainAxisSize.min, // Allow column to shrink
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header with scroll indicator
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4, right: 4, top: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ? Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
-                          'Personalized Quest Suggestions',
+                        Icon(
+                          Icons.hourglass_empty, 
+                          size: 64, 
+                          color: AppColors.textSecondary.withOpacity(0.5)
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'No active quests yet',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 16, // Reduced font size
-                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textSecondary,
                           ),
                         ),
-                        // Add scroll indicator text
+                        const SizedBox(height: 8),
                         Text(
-                          'Scroll to see all',
-                          style: TextStyle(
-                            fontSize: 11, // Reduced font size
-                            color: Colors.grey[600],
-                            fontStyle: FontStyle.italic,
+                          'Add a new quest using the + button\nor check out our suggestions',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: AppColors.textSecondary),
+                        ),
+                        const SizedBox(height: 32),
+                        OutlinedButton.icon(
+                          onPressed: _showSuggestionsDialog,
+                          icon: Icon(Icons.lightbulb_outline, color: AppColors.warning),
+                          label: const Text("Browse Quest Suggestions"),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.primary,
+                            side: BorderSide(color: AppColors.primary),
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                           ),
                         ),
                       ],
                     ),
+                  )
+                : ListView.builder(
+                    itemCount: _activeQuests.length,
+                    padding: const EdgeInsets.only(bottom: 8),
+                    itemBuilder: (context, index) {
+                      final quest = _activeQuests[index];
+                      return _buildQuestCard(
+                        quest,
+                        onVerify: () => _verifyQuest(quest.id),
+                        onDelete: () => _deleteQuest(quest.id),
+                      );
+                    },
                   ),
-                  const SizedBox(height: 4), // Reduced spacing
-                  
-                  // List of personalized suggestions
-                  SizedBox(
-                    height: 160, // Reduced fixed height to prevent overflow
-                    child: _personalizedQuests.isEmpty
-                        ? Center(
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.notifications_off, size: 40, color: Colors.grey),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'No more suggestions',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  Text(
-                                    'Check back later!',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        : ListView.builder(
-                            itemCount: _personalizedQuests.length,
-                            padding: const EdgeInsets.only(bottom: 4), // Reduced padding
-                            itemBuilder: (context, index) {
-                              final quest = _personalizedQuests[index];
-                              return _buildCompactSuggestionCard( // Using a more compact card
-                                quest,
-                                onAdd: () => _addSuggestedQuest(quest),
-                              );
-                            },
-                          ),
-                  ),
-                ],
-              ),
             ),
-            
-            // Add some bottom padding
-            const SizedBox(height: 12),
           ],
         ),
+      ),
+      
+      // Add floating action button for creating new quests
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showAddQuestDialog,
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.white,
+        tooltip: 'Create New Quest',
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -499,11 +546,14 @@ class _QuestPageState extends State<QuestPage> {
   // Build a quest card for active quests
   Widget _buildQuestCard(Quest quest, {required Function onVerify, required Function onDelete}) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      color: quest.isCompleted ? Colors.grey[100] : Colors.white,
-      elevation: quest.isCompleted ? 0 : 1,
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: quest.isCompleted ? 0 : 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      color: quest.isCompleted ? AppColors.cardBackground : AppColors.white,
       child: Padding(
-        padding: const EdgeInsets.all(12), // Reduced padding
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -512,17 +562,18 @@ class _QuestPageState extends State<QuestPage> {
               children: [
                 // Quest Icon
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.deepPurple.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.primaryLight.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.task_alt,
-                    color: Colors.deepPurple,
+                    color: AppColors.primary,
+                    size: 24,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 16),
                 
                 // Quest details
                 Expanded(
@@ -533,27 +584,62 @@ class _QuestPageState extends State<QuestPage> {
                         quest.title,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 18,
                           decoration: quest.isCompleted ? TextDecoration.lineThrough : null,
-                          color: quest.isCompleted ? Colors.grey : Colors.black,
+                          color: quest.isCompleted ? AppColors.textSecondary : AppColors.textPrimary,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
                       Text(
                         quest.description,
                         style: TextStyle(
-                          color: quest.isCompleted ? Colors.grey : Colors.black87,
+                          color: quest.isCompleted ? AppColors.textSecondary : AppColors.textPrimary,
                           fontSize: 14,
                         ),
                       ),
-                      const SizedBox(height: 4), // Reduced spacing
-                      Text(
-                        '${quest.points} points',
-                        style: const TextStyle(
-                          color: Colors.deepPurple,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '${quest.points} points',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          
+                          if (quest.isCompleted)
+                            Container(
+                              margin: const EdgeInsets.only(left: 8),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AppColors.success.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.check, size: 12, color: AppColors.success),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Completed',
+                                    style: TextStyle(
+                                      color: AppColors.success,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),
@@ -561,7 +647,9 @@ class _QuestPageState extends State<QuestPage> {
               ],
             ),
             
-            const SizedBox(height: 8), // Reduced spacing
+            const SizedBox(height: 16),
+            const Divider(height: 1),
+            const SizedBox(height: 8),
             
             // Action buttons
             Row(
@@ -569,205 +657,26 @@ class _QuestPageState extends State<QuestPage> {
               children: [
                 // Complete button (renamed from Verify)
                 if (!quest.isCompleted)
-                  ElevatedButton.icon(
+                  TextButton.icon(
                     onPressed: () => onVerify(),
-                    icon: const Icon(Icons.check_circle, size: 16),
-                    label: const Text('Complete'), // Changed from "Verify" to "Complete"
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    icon: const Icon(Icons.check_circle, size: 18),
+                    label: const Text('Complete'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.success,
                     ),
                   )
                 else
-                  const Chip(
-                    label: Text('Completed'),
-                    backgroundColor: Colors.green,
-                    labelStyle: TextStyle(color: Colors.white),
-                  ),
+                  const SizedBox.shrink(),
                   
                 const SizedBox(width: 8),
                 
                 // Delete button
-                ElevatedButton.icon(
+                TextButton.icon(
                   onPressed: () => onDelete(),
-                  icon: const Icon(Icons.delete, size: 16),
+                  icon: const Icon(Icons.delete, size: 18),
                   label: const Text('Delete'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Build a suggestion card for personalized quests
-  Widget _buildSuggestionCard(Quest quest, {required Function onAdd}) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(12), // Reduced padding
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Quest Icon
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.lightbulb,
-                    color: Colors.amber,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                
-                // Quest details
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        quest.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        quest.description,
-                        style: const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '${quest.points} points',
-                        style: const TextStyle(
-                          color: Colors.deepPurple,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 12),
-            
-            // Add button
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton.icon(
-                onPressed: () => onAdd(),
-                icon: const Icon(Icons.add_circle, size: 16),
-                label: const Text('Add to My Quests'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Build a more compact suggestion card for personalized quests
-  Widget _buildCompactSuggestionCard(Quest quest, {required Function onAdd}) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 6), // Reduced margin
-      elevation: 1, // Reduced elevation
-      child: Padding(
-        padding: const EdgeInsets.all(8), // Reduced padding
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Quest Icon - made smaller
-                Container(
-                  padding: const EdgeInsets.all(6), // Reduced padding
-                  decoration: BoxDecoration(
-                    color: Colors.amber.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(6), // Smaller radius
-                  ),
-                  child: const Icon(
-                    Icons.lightbulb,
-                    color: Colors.amber,
-                    size: 18, // Smaller icon
-                  ),
-                ),
-                const SizedBox(width: 8), // Reduced spacing
-                
-                // Quest details
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        quest.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14, // Smaller text
-                        ),
-                      ),
-                      const SizedBox(height: 2), // Reduced spacing
-                      Text(
-                        quest.description,
-                        style: const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12, // Smaller text
-                        ),
-                        maxLines: 2, // Limit to 2 lines
-                        overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
-                      ),
-                      const SizedBox(height: 4), // Reduced spacing
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Points
-                          Text(
-                            '${quest.points} points',
-                            style: const TextStyle(
-                              color: Colors.deepPurple,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12, // Smaller text
-                            ),
-                          ),
-                          // Add button - more compact
-                          TextButton.icon(
-                            onPressed: () => onAdd(),
-                            icon: const Icon(Icons.add_circle, size: 14),
-                            label: const Text('Add', style: TextStyle(fontSize: 12)),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.deepPurple,
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              minimumSize: Size.zero, // Allow smaller size
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Smaller tap target
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.error,
                   ),
                 ),
               ],
