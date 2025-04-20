@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
+import 'package:mentalsustainability/theme/app_colors.dart';
 import 'package:mentalsustainability/pages/Quests/quest_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -191,8 +191,8 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 4),
                 Text(
                   'Points: ${tip.questPoints}',
-                  style: const TextStyle(
-                    color: Colors.deepPurple,
+                  style: TextStyle(
+                    color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -207,8 +207,8 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () => _addTipToQuests(tip),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                foregroundColor: Colors.white,
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
               ),
               child: const Text('Add to Quests'),
             ),
@@ -235,14 +235,14 @@ class _HomePageState extends State<HomePage> {
                   height: 150,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.deepPurple.withOpacity(0.1),
+                    color: AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
                     child: Icon(
                       Icons.event,
                       size: 50,
-                      color: Colors.deepPurple.withOpacity(0.5),
+                      color: AppColors.primary.withOpacity(0.5),
                     ),
                   ),
                 ),
@@ -266,10 +266,10 @@ class _HomePageState extends State<HomePage> {
                 // Event date and location
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.calendar_today,
                       size: 16,
-                      color: Colors.deepPurple,
+                      color: AppColors.primary,
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -284,10 +284,10 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.location_on,
                       size: 16,
-                      color: Colors.deepPurple,
+                      color: AppColors.primary,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -322,10 +322,10 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 4),
                 Text('Description: ${event.description} on ${event.date} at ${event.location}'),
                 const SizedBox(height: 4),
-                const Text(
+                Text(
                   'Points: 100',
                   style: TextStyle(
-                    color: Colors.deepPurple,
+                    color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -343,8 +343,8 @@ class _HomePageState extends State<HomePage> {
                 _addEventToQuests(event);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                foregroundColor: Colors.white,
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
               ),
               child: const Text('Add to Quests'),
             ),
@@ -366,6 +366,8 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       body: RefreshIndicator(
+        color: AppColors.primary,
+        backgroundColor: AppColors.cardBackground,
         onRefresh: () async {
           // In a real app, this would refresh data from an API
           await Future.delayed(const Duration(seconds: 1));
@@ -537,12 +539,12 @@ class _HomePageState extends State<HomePage> {
               // Event image (placeholder color if image not available)
               Container(
                 height: 80, // Reduced height
-                color: Colors.deepPurple.withOpacity(0.1),
+                color: AppColors.primary.withOpacity(0.1),
                 child: Center(
                   child: Icon(
                     Icons.image_outlined ,
                     size: 30, // Reduced size
-                    color: Colors.deepPurple.withOpacity(0.5),
+                    color: AppColors.primary.withOpacity(0.5),
                   ),
                 ),
               ),
@@ -564,17 +566,17 @@ class _HomePageState extends State<HomePage> {
                     // Combine date and location in a more compact way
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.calendar_month_outlined,
                           size: 10, // Reduced size
-                          color: Colors.grey,
+                          color: AppColors.textSecondary,
                         ),
                         const SizedBox(width: 2),
                         Text(
                           event.date,
                           style: TextStyle(
                             fontSize: 10, // Reduced size
-                            color: Colors.grey[600],
+                            color: AppColors.textSecondary,
                           ),
                         ),
                       ],
@@ -585,7 +587,7 @@ class _HomePageState extends State<HomePage> {
                       child: TextButton(
                         onPressed: () => _showEventDialog(event),
                         style: TextButton.styleFrom(
-                          foregroundColor: Colors.deepPurple,
+                          foregroundColor: AppColors.primary,
                           padding: EdgeInsets.zero,
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -632,8 +634,8 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       LinearProgressIndicator(
                         value: progressPercentage,
-                        backgroundColor: Colors.grey[200],
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                        backgroundColor: AppColors.cardBackground,
+                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                         minHeight: 10,
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -641,7 +643,7 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         '$completedQuests of $totalQuests quests completed',
                         style: TextStyle(
-                          color: Colors.grey[600],
+                          color: AppColors.textSecondary,
                           fontSize: 12,
                         ),
                       ),
@@ -665,8 +667,8 @@ class _HomePageState extends State<HomePage> {
                                 width: 60,
                                 child: CircularProgressIndicator(
                                   value: progressPercentage,
-                                  backgroundColor: Colors.grey[200],
-                                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                                  backgroundColor: AppColors.cardBackground,
+                                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                                   strokeWidth: 6,
                                 ),
                               ),
@@ -716,13 +718,13 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.deepPurple.withOpacity(0.1),
+                    color: AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '$totalPoints total',
-                    style: const TextStyle(
-                      color: Colors.deepPurple,
+                    style: TextStyle(
+                      color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -752,7 +754,7 @@ class _HomePageState extends State<HomePage> {
                           Container(
                             height: height,
                             decoration: BoxDecoration(
-                              color: Colors.deepPurple,
+                              color: AppColors.primary,
                               borderRadius: BorderRadius.circular(3),
                             ),
                           ),
@@ -768,7 +770,7 @@ class _HomePageState extends State<HomePage> {
                             day.day.split(' ')[1], // Only day number
                             style: TextStyle(
                               fontSize: 8,
-                              color: Colors.grey[600],
+                              color: AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -815,12 +817,12 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
+                          color: AppColors.success.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.check_circle,
-                          color: Colors.green,
+                          color: AppColors.success,
                           size: 16,
                         ),
                       ),
@@ -840,7 +842,7 @@ class _HomePageState extends State<HomePage> {
                               quest.description,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey[600],
+                                color: AppColors.textSecondary,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -851,15 +853,15 @@ class _HomePageState extends State<HomePage> {
                                   quest.completedDate!,
                                   style: TextStyle(
                                     fontSize: 11,
-                                    color: Colors.grey[600],
+                                    color: AppColors.textSecondary,
                                     fontStyle: FontStyle.italic,
                                   ),
                                 ),
                                 Text(
                                   '+${quest.points} points',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.green,
+                                    color: AppColors.success,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -874,11 +876,11 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             if (quests.isEmpty)
-              const Center(
+              Center(
                 child: Text(
                   'No completed quests yet',
                   style: TextStyle(
-                    color: Colors.grey,
+                    color: AppColors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
@@ -915,13 +917,13 @@ class _HomePageState extends State<HomePage> {
                       width: 60,
                       height: 60,
                       decoration: BoxDecoration(
-                        color: Colors.deepPurple.withOpacity(0.1),
+                        color: AppColors.primary.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Icon(
                           _getBadgeIcon(badge.title),
-                          color: Colors.deepPurple,
+                          color: AppColors.primary,
                           size: 30,
                         ),
                       ),

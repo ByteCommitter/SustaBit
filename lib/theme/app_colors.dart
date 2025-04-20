@@ -7,7 +7,7 @@ class AppColors {
   AppColors._();
   
   // Current active theme
-  static AppTheme currentTheme = purpleTheme;
+  static AppTheme currentTheme = tealTheme;
   
   // Theme accessor methods
   static Color get primary => currentTheme.primary;
