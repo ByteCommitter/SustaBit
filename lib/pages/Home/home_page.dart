@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 import 'package:mentalsustainability/pages/Quests/quest_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -121,8 +122,8 @@ class _HomePageState extends State<HomePage> {
       'Event Added',
       '${event.title} has been added to your quests!',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green[100],
-      colorText: Colors.green[800],
+      backgroundColor: AppColors.success.withOpacity(0.1), // Use theme color
+      colorText: AppColors.success, // Use theme color
       margin: const EdgeInsets.all(16),
       borderRadius: 8,
       duration: const Duration(seconds: 3),
@@ -145,8 +146,8 @@ class _HomePageState extends State<HomePage> {
       'Tip Added',
       '${tip.questTitle} has been added to your quests!',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green[100],
-      colorText: Colors.green[800],
+      backgroundColor: AppColors.success.withOpacity(0.1), // Use theme color
+      colorText: AppColors.success, // Use theme color
       margin: const EdgeInsets.all(16),
       borderRadius: 8,
       duration: const Duration(seconds: 3),
@@ -388,7 +389,7 @@ class _HomePageState extends State<HomePage> {
                 'Here\'s your sustainability dashboard for today.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey[600],
+                  color: AppColors.textSecondary, // Use theme color
                 ),
               ),
               const SizedBox(height: 20),
@@ -467,12 +468,12 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withOpacity(0.1),
+                    color: AppColors.warning.withOpacity(0.1), // Use theme color
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.tips_and_updates,
-                    color: Colors.amber,
+                    color: AppColors.warning, // Use theme color
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -488,7 +489,7 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   onPressed: () => _showTipDialog(tip),
                   icon: const Icon(Icons.info_outline),
-                  color: Colors.deepPurple,
+                  color: AppColors.primary, // Use theme color
                   tooltip: 'Learn more',
                 ),
               ],
@@ -506,7 +507,7 @@ class _HomePageState extends State<HomePage> {
                 icon: const Icon(Icons.add_circle_outline, size: 16),
                 label: const Text('Add as Quest'),
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.deepPurple,
+                  foregroundColor: AppColors.primary, // Use theme color
                 ),
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 import 'community_page.dart';
 
 class SAChatPage extends StatefulWidget {
@@ -102,7 +103,7 @@ class _SAChatPageState extends State<SAChatPage> {
               backgroundColor: widget.teamMember.bookColor,
               child: Text(
                 widget.teamMember.name[0],
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: AppColors.white), // Use theme color
               ),
             ),
             const SizedBox(width: 10),
@@ -121,15 +122,15 @@ class _SAChatPageState extends State<SAChatPage> {
             ),
           ],
         ),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.primary, // Use theme color
+        foregroundColor: AppColors.white, // Use theme color
       ),
       body: Column(
         children: [
           // Team member info card
           Container(
             padding: const EdgeInsets.all(16),
-            color: Colors.deepPurple.withOpacity(0.1),
+            color: AppColors.primary.withOpacity(0.1), // Use theme color with opacity
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -191,10 +192,10 @@ class _SAChatPageState extends State<SAChatPage> {
           // Message input
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.white, // Use theme color
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: AppColors.blackOpacity20, // Use theme color with opacity
                   blurRadius: 4,
                   offset: const Offset(0, -2),
                 ),
@@ -225,7 +226,7 @@ class _SAChatPageState extends State<SAChatPage> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.send),
-                  color: Colors.deepPurple,
+                  color: AppColors.primary, // Use theme color
                   onPressed: () => _handleSubmitted(_messageController.text),
                 ),
               ],
@@ -250,7 +251,7 @@ class _SAChatPageState extends State<SAChatPage> {
               radius: 16,
               child: Text(
                 message.sender[0],
-                style: const TextStyle(fontSize: 12, color: Colors.white),
+                style: const TextStyle(fontSize: 12, color: AppColors.white), // Use theme color
               ),
             ),
             const SizedBox(width: 8),
@@ -260,7 +261,7 @@ class _SAChatPageState extends State<SAChatPage> {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: message.isUser
-                    ? Colors.deepPurple
+                    ? AppColors.primary // Use theme color
                     : Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(16),
               ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 import 'sa_chat_page.dart';
-import 'community_page.dart'; // Add this import
+import 'community_page.dart'; 
 
 class SALibraryPage extends StatelessWidget {
   const SALibraryPage({super.key});
@@ -11,8 +12,8 @@ class SALibraryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Students Anonymous Library'),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.primary, // Use theme color
+        foregroundColor: AppColors.white, // Use theme color
         elevation: 0,
       ),
       body: Column(
@@ -21,36 +22,36 @@ class SALibraryPage extends StatelessWidget {
           const SizedBox(height:15),
           Container(
             padding: const EdgeInsets.all(20),
-            color: Colors.deepPurple.withOpacity(0.1),
+            color: AppColors.primary.withOpacity(0.1), // Use theme color with opacity
             //add a padding to the above of this container
 
-            child: const Column(
+            child: Column(
               children: [
                 Text(
                   'The Human Library',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple,
+                    color: AppColors.primary, // Use theme color
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text(
                   'Our peers act as a human library, helping with mental health by listening and providing support to everyone on campus.',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.black87,
+                    color: AppColors.textPrimary, // Use theme color
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   'Click on a book to connect with a peer supporter',
                   style: TextStyle(
                     fontSize: 14,
                     fontStyle: FontStyle.italic,
-                    color: Colors.grey,
+                    color: AppColors.textSecondary, // Use theme color
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -136,24 +137,24 @@ class SALibraryPage extends StatelessWidget {
 // Use the team members from community_page.dart
 final List<SATeamMember> _saTeamMembers = [
   // Same definitions as in community_page.dart
-  const SATeamMember(
+  SATeamMember(
     id: 'sa1',
     name: 'Alisa',
     specialty: 'Anxiety & Stress',
     bio: 'Peer supporter with experience helping fellow students manage anxiety and stress.',
-    bookColor: Colors.deepPurple,
+    bookColor: AppColors.primary, // Use theme color
     presetMessages: [
       "Hi there! I'm Alisa. How can I support you today?",
       "Remember that feeling anxious is a normal response to stress. Let's talk about it.",
       "Would you like to learn some breathing techniques that can help in moments of stress?",
     ],
   ),
-  const SATeamMember(
+  SATeamMember(
     id: 'sa2',
     name: 'Rohan',
     specialty: 'Peer Support',
     bio: 'Student who has personal experience with overcoming depression and wants to help others.',
-    bookColor: Colors.teal,
+    bookColor: AppColors.success, // Use theme color instead of Colors.teal
     presetMessages: [
       "Hey! I'm Rohan. I'm here to listen without judgment.",
       "As someone who's been through similar struggles, I understand how overwhelming things can get.",

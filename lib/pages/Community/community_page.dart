@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 import 'sa_library_page.dart';
 import 'post_thread_page.dart';
-import 'sa_chat_page.dart'; // Add this import
+import 'sa_chat_page.dart'; 
 import 'package:mentalsustainability/pages/Community/moderator_dashboard.dart';
 
 class CommunityPage extends StatefulWidget {
@@ -12,7 +13,7 @@ class CommunityPage extends StatefulWidget {
   const CommunityPage({
     super.key, 
     this.prefilledPost,
-    this.isModerator = false, // Default to false
+    this.isModerator = false, // Default to false,
   });
 
   @override
@@ -224,7 +225,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
         'Thanks for the Love!',
         'Your support means a lot to the community.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.pink[100],
+        backgroundColor: AppColors.accent.withOpacity(0.1), // Use theme color
         colorText: Colors.pink[800],
         margin: const EdgeInsets.all(16),
         borderRadius: 8,
@@ -245,8 +246,8 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
         ? 'You can find this post in your saved collection.'
         : 'This post has been removed from your saved collection.',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: _savedPosts[postId]! ? Colors.blue[100] : Colors.grey[200],
-      colorText: _savedPosts[postId]! ? Colors.blue[800] : Colors.grey[800],
+      backgroundColor: _savedPosts[postId]! ? AppColors.info.withOpacity(0.1) : Colors.grey[200],
+      colorText: _savedPosts[postId]! ? AppColors.info : Colors.grey[800],
       margin: const EdgeInsets.all(16),
       borderRadius: 8,
       duration: const Duration(seconds: 2),
@@ -264,7 +265,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
         children: [
           // Community header with tabs
           Container(
-            color: Colors.white,
+            color: AppColors.white, // Use theme color
             child: Column(
               children: [
                 // App bar with title and moderator access if applicable
@@ -289,8 +290,8 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                           icon: const Icon(Icons.admin_panel_settings),
                           label: const Text('Mod Panel'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange,
-                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.orange, // Keep special color for moderator
+                            foregroundColor: AppColors.white, // Use theme color
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           ),
                         ),
@@ -301,9 +302,9 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                 // Tab bar
                 TabBar(
                   controller: _tabController,
-                  labelColor: Colors.deepPurple,
+                  labelColor: AppColors.primary, // Use theme color
                   unselectedLabelColor: Colors.grey,
-                  indicatorColor: Colors.deepPurple,
+                  indicatorColor: AppColors.primary, // Use theme color
                   tabs: const [
                     Tab(text: "Threads"),
                     Tab(text: "Sereine Team"),
@@ -397,16 +398,16 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                             'Success',
                             'Your post has been shared with the community!',
                             snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.green[100],
-                            colorText: Colors.green[800],
+                            backgroundColor: AppColors.success.withOpacity(0.1), // Use theme color
+                            colorText: AppColors.success, // Use theme color
                             margin: const EdgeInsets.all(16),
                             borderRadius: 8,
                             duration: const Duration(seconds: 3),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.primary, // Use theme color
+                          foregroundColor: AppColors.white, // Use theme color
                         ),
                         child: const Text('Post'),
                       ),
@@ -436,15 +437,15 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
         // Header section with minimal description
         Container(
           padding: const EdgeInsets.all(20),
-          color: Colors.deepPurple.withOpacity(0.1),
-          child: const Column(
+          color: AppColors.primary.withOpacity(0.1), // Use theme color
+          child: Column(
             children: [
               Text(
                 'The Human Library',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
+                  color: AppColors.primary, // Use theme color
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -455,7 +456,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                 style: TextStyle(
                   fontSize: 14,
                   fontStyle: FontStyle.italic,
-                  color: Colors.grey,
+                  color: AppColors.textSecondary, // Use theme color
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -639,16 +640,16 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             "Connect with Fellow Students",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.deepPurple,
+              color: AppColors.primary, // Use theme color
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.info_outline, color: Colors.deepPurple),
+            icon: Icon(Icons.info_outline, color: AppColors.primary), // Use theme color
             onPressed: () => _showSeremateInfoDialog(context),
             tooltip: "About Seremate",
           ),
@@ -954,8 +955,8 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.primary, // Use theme color
+                    foregroundColor: AppColors.white, // Use theme color
                   ),
                   child: const Text('Update Preferences'),
                 ),
@@ -1058,12 +1059,12 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
-                const Text(
+                Text(
                   "Finding connection in a sea of people",
                   style: TextStyle(
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple,
+                    color: AppColors.primary, // Use theme color
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -1131,7 +1132,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.deepPurple,
+                      foregroundColor: AppColors.primary, // Use theme color
                     ),
                     child: const Text("Got it"),
                   ),
@@ -1190,7 +1191,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                 description,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey[600],
+                  color: AppColors.textSecondary, // Use theme color
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -1208,10 +1209,10 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
       selected: isSelected,
       onSelected: (_) {},
       backgroundColor: Colors.grey[100],
-      selectedColor: Colors.deepPurple.withOpacity(0.15),
-      checkmarkColor: Colors.deepPurple,
+      selectedColor: AppColors.primary.withOpacity(0.15), // Use theme color
+      checkmarkColor: AppColors.primary, // Use theme color
       labelStyle: TextStyle(
-        color: isSelected ? Colors.deepPurple : Colors.grey[800],
+        color: isSelected ? AppColors.primary : Colors.grey[800], // Use theme color
         fontSize: 12,
       ),
     );
@@ -1481,14 +1482,14 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.1),
+                        color: AppColors.error.withOpacity(0.1), // Use theme color
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.red.withOpacity(0.3)),
+                        border: Border.all(color: AppColors.error.withOpacity(0.3)), // Use theme color
                       ),
-                      child: const Text(
+                      child: Text(
                         'USER BANNED',
                         style: TextStyle(
-                          color: Colors.red,
+                          color: AppColors.error, // Use theme color
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                         ),
@@ -1773,7 +1774,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
               );
             },
             style: TextButton.styleFrom(
-              foregroundColor: Colors.red,
+              foregroundColor: AppColors.error, // Use theme color
             ),
             child: const Text('DELETE'),
           ),
@@ -1961,8 +1962,8 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
           'Report submitted',
           'Thank you for helping keep our community safe. We\'ll review this post.',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.blue[100],
-          colorText: Colors.blue[800],
+          backgroundColor: AppColors.info.withOpacity(0.1), // Use theme color
+          colorText: AppColors.info, // Use theme color
           margin: const EdgeInsets.all(16),
           borderRadius: 8,
           duration: const Duration(seconds: 3),
@@ -1972,7 +1973,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
-            const Icon(Icons.radio_button_unchecked, size: 18, color: Colors.deepPurple),
+            Icon(Icons.radio_button_unchecked, size: 18, color: AppColors.primary), // Use theme color
             const SizedBox(width: 12),
             Text(reason),
           ],

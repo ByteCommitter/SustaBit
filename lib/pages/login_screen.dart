@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 import '../services/auth_service.dart';
 import 'onboarding_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,7 +13,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white, // Use theme color
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -20,12 +21,12 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Logo or app name
-              const Text(
+              Text(
                 "R N T",
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
+                  color: AppColors.primary, // Use theme color
                 ),
               ),
               const SizedBox(height: 40),
@@ -41,11 +42,11 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               
-              const Text(
+              Text(
                 "Sign in to access your dashboard and resources",
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey,
+                  color: AppColors.textSecondary, // Use theme color
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -54,14 +55,13 @@ class LoginScreen extends StatelessWidget {
               // Google Sign In Button (Dummy button)
               ElevatedButton(
                 onPressed: () => Get.off(() => const OnboardingScreen()),
-                //onPressed: () => _dummySignIn(),
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.textPrimary, // Use theme color
+                  backgroundColor: AppColors.white, // Use theme color
                   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: Colors.grey),
+                    side: BorderSide(color: AppColors.divider), // Use theme color
                   ),
                 ),
                 child: const Row(
@@ -87,25 +87,12 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               
-              // Development shortcut button
-              // ElevatedButton(
-              //   onPressed: () => Get.off(() => OnboardingScreen()),
-              //   style: ElevatedButton.styleFrom(
-              //     foregroundColor: Colors.white,
-              //     backgroundColor: Colors.deepPurple,
-              //     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              //   ),
-              //   child: const Text('Skip to Onboarding'),
-              // ),
-              
-              const SizedBox(height: 20),
-              
               // Terms and privacy text
-              const Text(
+              Text(
                 "By continuing, you agree to our Terms of Service and Privacy Policy",
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey,
+                  color: AppColors.textSecondary, // Use theme color
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -115,25 +102,4 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-
-//   // Simplified dummy sign-in function
-//   void _dummySignIn() {
-//     // Show loading indicator
-//     Get.dialog(
-//       const Center(
-//         child: CircularProgressIndicator(),
-//       ),
-//       barrierDismissible: false,
-//     );
-    
-//     // Simulate network delay
-//     Future.delayed(const Duration(seconds: 2), () {
-//       // Close the loading dialog
-//       Get.back();
-      
-//       // Navigate to onboarding screen
-//       Get.off(() => OnboardingScreen());
-//     });
-//   }
-
 }

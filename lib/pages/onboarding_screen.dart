@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mentalsustainability/pages/base_widget.dart'; // Import the base screen
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -305,7 +306,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   IconButton(
                     icon: Icon(
                       Icons.arrow_back,
-                      color: _currentPage > 0 ? Colors.deepPurple : Colors.grey,
+                      color: _currentPage > 0 ? AppColors.primary : Colors.grey, // Use theme color
                     ),
                     onPressed: _currentPage > 0 ? _previousPage : null,
                   ),
@@ -313,7 +314,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: LinearProgressIndicator(
                       value: (_currentPage + 1) / (_questions.length + 2), // +2 to account for welcome and summary pages
                       backgroundColor: Colors.grey[200],
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary), // Use theme color
                     ),
                   ),
                 ],
@@ -358,18 +359,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Icons.psychology,
             size: 80,
-            color: Colors.deepPurple,
+            color: AppColors.primary, // Use theme color
           ),
           const SizedBox(height: 40),
-          const Text(
+          Text(
             'Welcome to R N B',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.deepPurple,
+              color: AppColors.primary, // Use theme color
             ),
             textAlign: TextAlign.center,
           ),
@@ -383,8 +384,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ElevatedButton(
             onPressed: _nextPage,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.primary, // Use theme color
+              foregroundColor: AppColors.white, // Use theme color
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -445,10 +446,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: isSelected ? Colors.deepPurple : Colors.grey[300]!,
+                            color: isSelected ? AppColors.primary : Colors.grey[300]!,
                             width: isSelected ? 2 : 1,
                           ),
-                          color: isSelected ? Colors.deepPurple.withOpacity(0.1) : Colors.transparent,
+                          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
                         ),
                         child: Row(
                           children: [
@@ -458,10 +459,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: isSelected ? Colors.deepPurple : Colors.grey,
+                                  color: isSelected ? AppColors.primary : Colors.grey,
                                   width: 2,
                                 ),
-                                color: isSelected ? Colors.deepPurple : Colors.transparent,
+                                color: isSelected ? AppColors.primary : Colors.transparent,
                               ),
                               child: isSelected
                                   ? const Icon(
@@ -478,7 +479,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                  color: isSelected ? Colors.deepPurple : Colors.black,
+                                  color: isSelected ? AppColors.primary : Colors.black,
                                 ),
                               ),
                             ),
@@ -554,10 +555,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: isSelected ? Colors.deepPurple : Colors.grey[300]!,
+                          color: isSelected ? AppColors.primary : Colors.grey[300]!,
                           width: isSelected ? 2 : 1,
                         ),
-                        color: isSelected ? Colors.deepPurple.withOpacity(0.1) : Colors.transparent,
+                        color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
                       ),
                       child: Row(
                         children: [
@@ -567,10 +568,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(
-                                color: isSelected ? Colors.deepPurple : Colors.grey,
+                                color: isSelected ? AppColors.primary : Colors.grey,
                                 width: 2,
                               ),
-                              color: isSelected ? Colors.deepPurple : Colors.transparent,
+                              color: isSelected ? AppColors.primary : Colors.transparent,
                             ),
                             child: isSelected
                                 ? const Icon(
@@ -587,7 +588,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                color: isSelected ? Colors.deepPurple : Colors.black,
+                                color: isSelected ? AppColors.primary : Colors.black,
                               ),
                             ),
                           ),
@@ -605,8 +606,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: ElevatedButton(
                 onPressed: () => _submitMultiSelect(questionIndex),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  foregroundColor: Colors.white,
+                  backgroundColor: AppColors.primary, // Use theme color
+                  foregroundColor: AppColors.white, // Use theme color
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 ),
                 child: const Text('Continue', style: TextStyle(fontSize: 16)),
@@ -694,8 +695,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Get.offAll(() => const BaseScreen());
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                foregroundColor: Colors.white,
+                backgroundColor: AppColors.primary, // Use theme color
+                foregroundColor: AppColors.white, // Use theme color
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),

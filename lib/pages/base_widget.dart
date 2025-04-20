@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:mentalsustainability/pages/Home/home_page.dart';
+import 'package:mentalsustainability/theme/app_colors.dart';
+import 'package:mentalsustainability/theme/theme_provider.dart';
 import '../services/auth_service.dart';
 import 'Profile/profile_page.dart';
 import 'Community/community_page.dart';
@@ -19,6 +20,9 @@ class _BaseScreenState extends State<BaseScreen> {
   final AuthService _authService = AuthService();
   bool _isDarkMode = false;
   bool _notificationsEnabled = true;
+  
+  // Get the theme provider
+  final ThemeProvider _themeProvider = Get.find<ThemeProvider>();
   
   @override
   void initState(){
@@ -86,13 +90,13 @@ class _BaseScreenState extends State<BaseScreen> {
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         elevation: 0,
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.deepPurple),
+              icon: Icon(Icons.menu, color: AppColors.primary),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -101,10 +105,10 @@ class _BaseScreenState extends State<BaseScreen> {
         ),
         title: null, // No title in the middle
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: AppColors.background,
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline_rounded , color: Colors.deepPurple, size: 32),
+            icon: Icon(Icons.help_outline_rounded, color: AppColors.primary, size: 32),
             onPressed: () {
               // Navigate to the guide page when help icon is tapped
               Navigator.of(context).push(
@@ -138,15 +142,15 @@ class _BaseScreenState extends State<BaseScreen> {
       //Bottom Navigation Bar:
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
-        selectedIconTheme: const IconThemeData(color: Colors.deepPurple),
+        selectedIconTheme: IconThemeData(color: AppColors.primary),
         iconSize: 34,
-        selectedItemColor: const Color.fromARGB(255, 248, 213, 16),
+        selectedItemColor: AppColors.bottomNavSelectedItem,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         unselectedIconTheme: const IconThemeData(
           color: Color.fromARGB(255, 0, 0, 0),
         ),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: AppColors.primary,
         elevation: 0, 
         items: const <BottomNavigationBarItem>[
           // Home
@@ -190,7 +194,7 @@ class _BaseScreenState extends State<BaseScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white, Colors.deepPurple.shade50],
+            colors: [AppColors.drawerBodyStart, AppColors.drawerBodyEnd],
           ),
         ),
         child: ListView(
@@ -201,7 +205,7 @@ class _BaseScreenState extends State<BaseScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Colors.deepPurple, Colors.deepPurple.shade300],
+                  colors: [AppColors.drawerHeaderStart, AppColors.drawerHeaderEnd],
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -245,15 +249,15 @@ class _BaseScreenState extends State<BaseScreen> {
               ),
             ),
             
-            // Take Personalised Quiz (renamed from "Retake Onboarding Quiz")
+            // Take Personalised Quiz
             ListTile(
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.2),
+                  color: AppColors.warning.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.quiz, color: Colors.amber),
+                child: Icon(Icons.quiz, color: AppColors.warning),
               ),
               title: const Text('Take Personalised Quiz'),
               subtitle: const Text('Customize your experience'),
@@ -264,6 +268,24 @@ class _BaseScreenState extends State<BaseScreen> {
             ),
             
             const Divider(),
+            
+            // Theme selector - NEW FEATURE
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.color_lens),
+              ),
+              title: const Text('App Theme'),
+              subtitle: Obx(() => Text(_themeProvider.currentThemeName)),
+              onTap: () {
+                _themeProvider.switchToNextTheme();
+                Navigator.pop(context); // Close drawer
+              },
+            ),
             
             // Dark mode toggle - styled
             SwitchListTile(

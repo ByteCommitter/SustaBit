@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 import 'community_page.dart';
 
 class PostThreadPage extends StatefulWidget {
@@ -51,8 +52,8 @@ class _PostThreadPageState extends State<PostThreadPage> {
         ? 'You can find this post in your saved collection.'
         : 'This post has been removed from your saved collection.',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: _isSaved ? Colors.blue[100] : Colors.grey[200],
-      colorText: _isSaved ? Colors.blue[800] : Colors.grey[800],
+      backgroundColor: _isSaved ? AppColors.info.withOpacity(0.1) : Colors.grey[200], // Use theme color
+      colorText: _isSaved ? AppColors.info : Colors.grey[800], // Use theme color
       margin: const EdgeInsets.all(16),
       borderRadius: 8,
       duration: const Duration(seconds: 2),
@@ -93,7 +94,7 @@ class _PostThreadPageState extends State<PostThreadPage> {
           IconButton(
             icon: Icon(
               _isSaved ? Icons.bookmark : Icons.bookmark_border,
-              color: _isSaved ? Colors.deepPurple : null,
+              color: _isSaved ? AppColors.primary : null, // Use theme color
             ),
             onPressed: _toggleSavePost,
           ),
@@ -357,10 +358,10 @@ class _PostThreadPageState extends State<PostThreadPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white, // Use theme color
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: AppColors.blackOpacity10, // Use theme color
             spreadRadius: 1,
             blurRadius: 3,
             offset: const Offset(0, -1),
@@ -391,7 +392,7 @@ class _PostThreadPageState extends State<PostThreadPage> {
           IconButton(
             onPressed: _addComment,
             icon: const Icon(Icons.send),
-            color: Colors.deepPurple,
+            color: AppColors.primary, // Use theme color
           ),
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 
 class ModeratorDashboard extends StatefulWidget {
   const ModeratorDashboard({super.key});
@@ -77,13 +78,13 @@ class _ModeratorDashboardState extends State<ModeratorDashboard> with SingleTick
           'Moderator Dashboard', 
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.orange,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.orange, // Keep orange for moderator interface
+        foregroundColor: AppColors.white, // Use theme color
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Colors.white,
+          labelColor: AppColors.white, // Use theme color
           unselectedLabelColor: Colors.white70,
-          indicatorColor: Colors.white,
+          indicatorColor: AppColors.white, // Use theme color
           tabs: const [
             Tab(text: 'Reported Content'),
             Tab(text: 'Banned Users'),

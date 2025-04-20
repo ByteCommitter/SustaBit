@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 
 class GuidePage extends StatelessWidget {
   const GuidePage({super.key});
@@ -8,17 +9,17 @@ class GuidePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           '🧭 App Guide',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.deepPurple,
+            color: AppColors.primary, // Use theme color
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.background, // Use theme color
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.deepPurple),
+          icon: Icon(Icons.arrow_back, color: AppColors.primary), // Use theme color
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -73,12 +74,12 @@ class GuidePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Welcome to Sereine',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.deepPurple,
+            color: AppColors.primary, // Use theme color
           ),
         ),
         const SizedBox(height: 8),
@@ -86,7 +87,7 @@ class GuidePage extends StatelessWidget {
           'This guide will help you navigate the app and make the most of its features.',
           style: TextStyle(
             fontSize: 16,
-            color: Colors.grey[700],
+            color: AppColors.textSecondary, // Use theme color
           ),
         ),
         const SizedBox(height: 16),
@@ -94,20 +95,20 @@ class GuidePage extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: Container(
             padding: const EdgeInsets.all(12),
-            color: Colors.deepPurple.withOpacity(0.1),
-            child: const Row(
+            color: AppColors.primary.withOpacity(0.1), // Use theme color
+            child: Row(
               children: [
                 Icon(
                   Icons.tips_and_updates,
-                  color: Colors.deepPurple,
+                  color: AppColors.primary, // Use theme color
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Tap on any section below to learn more about that feature',
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
-                      color: Colors.deepPurple,
+                      color: AppColors.primary, // Use theme color
                     ),
                   ),
                 ),
@@ -132,7 +133,7 @@ class GuidePage extends StatelessWidget {
       child: ExpansionTile(
         title: Row(
           children: [
-            Icon(icon, color: Colors.deepPurple),
+            Icon(icon, color: AppColors.primary), // Use theme color
             const SizedBox(width: 12),
             Text(
               title,
@@ -143,8 +144,8 @@ class GuidePage extends StatelessWidget {
             ),
           ],
         ),
-        collapsedBackgroundColor: Colors.white,
-        backgroundColor: Colors.deepPurple.withOpacity(0.05),
+        collapsedBackgroundColor: AppColors.cardBackground, // Use theme color
+        backgroundColor: AppColors.primary.withOpacity(0.05), // Use theme color
         childrenPadding: const EdgeInsets.all(16),
         children: [content],
       ),
@@ -188,14 +189,14 @@ class GuidePage extends StatelessWidget {
       children: [
         Text(
           'Seremate connects you with fellow students who share similar interests or are looking for companions for various activities.',
-          style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+          style: TextStyle(fontSize: 15, color: AppColors.textPrimary), // Use theme color
         ),
         const SizedBox(height: 16),
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Container(
             padding: const EdgeInsets.all(12),
-            color: Colors.blue.withOpacity(0.1),
+            color: AppColors.info.withOpacity(0.1), // Use theme color
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -218,7 +219,7 @@ class GuidePage extends StatelessWidget {
         const SizedBox(height: 16),
         Text(
           'Your identity remains anonymous until you choose to share more information with your matched peers.',
-          style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+          style: TextStyle(fontSize: 15, color: AppColors.textPrimary), // Use theme color
         ),
       ],
     );
@@ -230,7 +231,7 @@ class GuidePage extends StatelessWidget {
       children: [
         Text(
           'The Sereine Team consists of trained peer supporters who can help with various challenges you might face.',
-          style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+          style: TextStyle(fontSize: 15, color: AppColors.textPrimary), // Use theme color
         ),
         const SizedBox(height: 16),
         const Text(
@@ -262,10 +263,10 @@ class GuidePage extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: Container(
             padding: const EdgeInsets.all(12),
-            color: Colors.deepPurple.withOpacity(0.1),
-            child: const Row(
+            color: AppColors.primary.withOpacity(0.1), // Use theme color
+            child: Row(
               children: [
-                Icon(Icons.lightbulb, color: Colors.amber),
+                Icon(Icons.lightbulb, color: AppColors.warning), // Use theme color
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -287,7 +288,7 @@ class GuidePage extends StatelessWidget {
       children: [
         Text(
           'Your privacy is our priority. Sereine is designed to provide support while protecting your personal information.',
-          style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+          style: TextStyle(fontSize: 15, color: AppColors.textPrimary), // Use theme color
         ),
         const SizedBox(height: 16),
         _buildFeatureItem(
@@ -323,7 +324,7 @@ class GuidePage extends StatelessWidget {
       children: [
         Text(
           'Sereine uses gamification to make your wellness journey more engaging and rewarding.',
-          style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+          style: TextStyle(fontSize: 15, color: AppColors.textPrimary), // Use theme color
         ),
         const SizedBox(height: 16),
         _buildFeatureItem(
@@ -371,23 +372,23 @@ class GuidePage extends StatelessWidget {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.deepPurple.withOpacity(0.3)),
+        side: BorderSide(color: AppColors.primary.withOpacity(0.3)), // Use theme color
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(Icons.support_agent, color: Colors.deepPurple),
+                Icon(Icons.support_agent, color: AppColors.primary), // Use theme color
                 SizedBox(width: 12),
                 Text(
                   'Still Need Help?',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple,
+                    color: AppColors.primary, // Use theme color
                   ),
                 ),
               ],
@@ -395,7 +396,7 @@ class GuidePage extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               'If you have any questions or need assistance navigating the app, our support team is here to help.',
-              style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+              style: TextStyle(fontSize: 15, color: AppColors.textPrimary), // Use theme color
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
@@ -407,13 +408,13 @@ class GuidePage extends StatelessWidget {
                   'Contact Support',
                   'Support email: support@sereine.app',
                   snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.deepPurple.withOpacity(0.1),
-                  colorText: Colors.deepPurple,
+                  backgroundColor: AppColors.primary.withOpacity(0.1), // Use theme color
+                  colorText: AppColors.primary, // Use theme color
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                foregroundColor: Colors.white,
+                backgroundColor: AppColors.primary, // Use theme color
+                foregroundColor: AppColors.white, // Use theme color
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -436,7 +437,7 @@ class GuidePage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Colors.deepPurple, size: 20),
+          Icon(icon, color: AppColors.primary, size: 20), // Use theme color
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -454,7 +455,7 @@ class GuidePage extends StatelessWidget {
                   description,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey[700],
+                    color: AppColors.textSecondary, // Use theme color
                   ),
                 ),
               ],
@@ -476,7 +477,7 @@ class GuidePage extends StatelessWidget {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Colors.blue[700],
+              color: AppColors.info, // Use theme color
             ),
           ),
           Expanded(
@@ -499,8 +500,8 @@ class GuidePage extends StatelessWidget {
           Container(
             width: 22,
             height: 22,
-            decoration: const BoxDecoration(
-              color: Colors.deepPurple,
+            decoration: BoxDecoration(
+              color: AppColors.primary, // Use theme color
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -520,7 +521,7 @@ class GuidePage extends StatelessWidget {
               text,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey[800],
+                color: AppColors.textPrimary, // Use theme color
               ),
             ),
           ),

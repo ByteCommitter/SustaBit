@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mentalsustainability/pages/base_widget.dart';
 import 'package:mentalsustainability/pages/guide_page.dart';
+import 'package:mentalsustainability/theme/app_colors.dart';
+import 'package:mentalsustainability/theme/theme_provider.dart';
 import 'pages/auth_wrapper.dart';
 import 'pages/onboarding_screen.dart';
 import 'pages/Home/home_page.dart';
@@ -11,17 +13,8 @@ import 'pages/Home/home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Comment out Firebase initialization since you're not using it
-  /*
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    print('Firebase initialized successfully');
-  } catch (e) {
-    print('Error initializing Firebase: $e');
-  }
-  */
+  // Initialize theme provider
+  Get.put(ThemeProvider());
   
   runApp(const MyApp());
 }
@@ -31,21 +24,40 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'R N T',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return GetBuilder<ThemeProvider>(
+      builder: (themeProvider) => GetMaterialApp(
+        title: 'Sereine',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primary,
+            primary: AppColors.primary,
+            secondary: AppColors.accent,
+            background: AppColors.background,
+            error: AppColors.error,
+          ),
+          useMaterial3: true,
+          scaffoldBackgroundColor: AppColors.background,
+          appBarTheme: AppBarTheme(
+            backgroundColor: AppColors.background,
+            foregroundColor: AppColors.primary,
+            elevation: 0,
+          ),
+          cardTheme: CardTheme(
+            color: AppColors.cardBackground,
+          ),
+          dividerTheme: DividerTheme.of(context).copyWith(
+            color: AppColors.divider,
+          ),
+        ),
+        home: AuthWrapper(),
+        getPages: [
+          GetPage(name: '/', page: () => AuthWrapper()),
+          GetPage(name: '/onboarding', page: () => const OnboardingScreen()),
+          GetPage(name: '/home', page: () => const BaseScreen()),
+          GetPage(name: '/guide', page: () => const GuidePage()),
+        ],
       ),
-      home: AuthWrapper(), // Changed from AuthWrapper() to BaseScreen() for testing
-      // Add routes for direct navigation
-      getPages: [
-        GetPage(name: '/', page: () => AuthWrapper()),
-        GetPage(name: '/onboarding', page: () => const OnboardingScreen()),
-        GetPage(name: '/home', page: () => const BaseScreen()),
-        GetPage(name: '/guide', page: () => const GuidePage()),
-      ],
     );
   }
 }
