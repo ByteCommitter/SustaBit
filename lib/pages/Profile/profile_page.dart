@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -22,33 +23,33 @@ class _ProfilePageState extends State<ProfilePage> {
         'name': 'Eco Warrior',
         'description': 'Completed 10 sustainability challenges',
         'icon': Icons.nature_people,
-        'color': Colors.green,
+        'color': AppColors.success, // Use theme color
         'level': 2,
       },
       {
         'name': 'Mindfulness Master',
         'description': 'Practiced mindfulness for 30 days',
         'icon': Icons.self_improvement,
-        'color': Colors.blue,
+        'color': AppColors.info, // Use theme color
         'level': 3,
       },
       {
         'name': 'Community Leader',
         'description': 'Helped 5 other community members',
         'icon': Icons.people,
-        'color': Colors.orange,
+        'color': AppColors.warning, // Use theme color
         'level': 1,
       },
       {
         'name': 'Knowledge Seeker',
         'description': 'Completed all educational modules',
         'icon': Icons.school,
-        'color': Colors.purple,
+        'color': AppColors.primary, // Use theme color
         'level': 2,
       },
     ],
     'interests': ['Meditation', 'Sustainability', 'Mental Health'],
-    'avatarColor': Colors.deepPurple,
+    'avatarColor': AppColors.primary, // Use theme color
   };
 
   // For editing profile
@@ -82,8 +83,8 @@ class _ProfilePageState extends State<ProfilePage> {
             'Profile Updated',
             'Your anonymous username has been updated successfully.',
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green[100],
-            colorText: Colors.green[800],
+            backgroundColor: AppColors.success.withOpacity(0.1), // Use theme color
+            colorText: AppColors.success, // Use theme color
             margin: const EdgeInsets.all(16),
             borderRadius: 8,
             duration: const Duration(seconds: 3),
@@ -148,7 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
             style: const TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: AppColors.white, // Use theme color
             ),
           ),
         ),
@@ -173,13 +174,13 @@ class _ProfilePageState extends State<ProfilePage> {
               // Points display
               Row(
                 children: [
-                  const Icon(Icons.stars, color: Colors.amber, size: 20),
+                  Icon(Icons.stars, color: AppColors.warning, size: 20), // Use theme color
                   const SizedBox(width: 4),
                   Text(
                     '${_userData['points']} points',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
-                      color: Colors.deepPurple,
+                      color: AppColors.primary, // Use theme color
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -205,11 +206,11 @@ class _ProfilePageState extends State<ProfilePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.person_outline, color: Colors.deepPurple),
-                    SizedBox(width: 8),
-                    Text(
+                    Icon(Icons.person_outline, color: AppColors.primary), // Use theme color
+                    const SizedBox(width: 8),
+                    const Text(
                       'Community Username',
                       style: TextStyle(
                         fontSize: 18,
@@ -222,7 +223,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPressed: _toggleEditMode,
                   icon: Icon(
                     _isEditing ? Icons.save : Icons.edit,
-                    color: Colors.deepPurple,
+                    color: AppColors.primary, // Use theme color
                   ),
                   tooltip: 'Change anonymous username',
                 ),
@@ -242,21 +243,21 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
-                          color: Colors.deepPurple.withOpacity(0.1),
+                          color: AppColors.primary.withOpacity(0.1), // Use theme color
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.deepPurple.withOpacity(0.3)),
+                          border: Border.all(color: AppColors.primary.withOpacity(0.3)), // Use theme color
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.shield, size: 16, color: Colors.deepPurple),
+                            Icon(Icons.shield, size: 16, color: AppColors.primary), // Use theme color
                             const SizedBox(width: 6),
                             Text(
                               _userData['anonymousName'],
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.deepPurple,
+                                color: AppColors.primary, // Use theme color
                               ),
                             ),
                           ],
@@ -266,15 +267,15 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
+                          color: AppColors.success.withOpacity(0.1), // Use theme color
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.green.withOpacity(0.3)),
+                          border: Border.all(color: AppColors.success.withOpacity(0.3)), // Use theme color
                         ),
-                        child: const Text(
+                        child: Text(
                           'Anonymous',
                           style: TextStyle(
                             fontSize: 11,
-                            color: Colors.green,
+                            color: AppColors.success, // Use theme color
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -286,7 +287,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     'This is your anonymous identity in the community section.',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey[600],
+                      color: AppColors.textSecondary, // Use theme color
                     ),
                   ),
                 ],
@@ -348,22 +349,22 @@ class _ProfilePageState extends State<ProfilePage> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: AppColors.info.withOpacity(0.1), // Use theme color
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blue.withOpacity(0.3)),
+              border: Border.all(color: AppColors.info.withOpacity(0.3)), // Use theme color
             ),
-            child: const Row(
+            child: Row(
               children: [
                 Icon(Icons.privacy_tip_outlined, 
-                  color: Colors.blue, 
+                  color: AppColors.info, // Use theme color
                   size: 20),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'Your real name is never shown to other community members',
                     style: TextStyle(
                       fontSize: 13,
-                      color: Colors.blue,
+                      color: AppColors.info, // Use theme color
                     ),
                   ),
                 ),
@@ -381,8 +382,8 @@ class _ProfilePageState extends State<ProfilePage> {
               icon: const Icon(Icons.check),
               label: const Text('Save Username'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                foregroundColor: Colors.white,
+                backgroundColor: AppColors.primary, // Use theme color
+                foregroundColor: AppColors.white, // Use theme color
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
             ),
@@ -427,14 +428,14 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildStatItem(IconData icon, String label, String value) {
     return Column(
       children: [
-        Icon(icon, size: 28, color: Colors.deepPurple),
+        Icon(icon, size: 28, color: AppColors.primary), // Use theme color
         const SizedBox(height: 8),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.deepPurple,
+            color: AppColors.primary, // Use theme color
           ),
         ),
         const SizedBox(height: 4),
@@ -443,7 +444,7 @@ class _ProfilePageState extends State<ProfilePage> {
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.grey[600],
+            color: AppColors.textSecondary, // Use theme color
           ),
         ),
       ],
@@ -476,7 +477,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     // Future enhancement: Navigate to full achievements page
                   },
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.deepPurple,
+                    foregroundColor: AppColors.primary, // Use theme color
                   ),
                 ),
               ],
@@ -545,7 +546,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white,
+                    color: AppColors.white, // Use theme color
                     border: Border.all(
                       color: achievement['color'],
                       width: 1.5,
@@ -579,7 +580,7 @@ class _ProfilePageState extends State<ProfilePage> {
               achievement['description'],
               style: TextStyle(
                 fontSize: 10,
-                color: Colors.grey[600],
+                color: AppColors.textSecondary, // Use theme color
               ),
               textAlign: TextAlign.center,
               maxLines: 2,
@@ -614,9 +615,9 @@ class _ProfilePageState extends State<ProfilePage> {
               runSpacing: 8,
               children: _userData['interests']
                   .map<Widget>((interest) => Chip(
-                        avatar: const Icon(Icons.favorite, color: Colors.deepPurple, size: 16),
+                        avatar: Icon(Icons.favorite, color: AppColors.primary, size: 16), // Use theme color
                         label: Text(interest),
-                        backgroundColor: Colors.deepPurple.withOpacity(0.1),
+                        backgroundColor: AppColors.primary.withOpacity(0.1), // Use theme color
                       ))
                   .toList(),
             ),
