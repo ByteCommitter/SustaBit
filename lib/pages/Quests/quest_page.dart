@@ -551,7 +551,7 @@ class _QuestPageState extends State<QuestPage> {
     
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 80.0), // Add bottom padding for FAB
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0), // Reduced bottom padding here
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -690,14 +690,19 @@ class _QuestPageState extends State<QuestPage> {
         ),
       ),
       
-      // Add floating action button for creating new quests
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddQuestDialog,
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.white,
-        tooltip: 'Create New Quest',
-        child: const Icon(Icons.add),
+      // Position floating action button to avoid bottom nav bar
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 16), // Add extra bottom padding to float above nav bar
+        child: FloatingActionButton(
+          onPressed: _showAddQuestDialog,
+          backgroundColor: AppColors.primary,
+          foregroundColor: AppColors.white,
+          tooltip: 'Create New Quest',
+          elevation: 5, // Increased elevation for better visibility
+          child: const Icon(Icons.add),
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

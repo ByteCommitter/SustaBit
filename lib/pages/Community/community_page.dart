@@ -1062,7 +1062,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                 Text(
                   "Finding connection in a sea of people",
                   style: TextStyle(
-                    fontSize: 23,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary, // Use theme color
                   ),
@@ -1072,7 +1072,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                 // Description
                 const Text(
                   "Many students feel lonely despite being surrounded by others. Seremate helps you connect anonymously with fellow students for walks, meals, study sessions, or just conversations.",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 16),
                 
@@ -1087,7 +1087,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                     const Expanded(
                       child: Text(
                         "Start anonymously, share contact info only when comfortable",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                   ],
@@ -1103,7 +1103,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                     const Expanded(
                       child: Text(
                         "Connect based on activities and shared interests",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                   ],
@@ -1119,7 +1119,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                     const Expanded(
                       child: Text(
                         "Meet in safe campus locations for peace of mind",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                   ],
