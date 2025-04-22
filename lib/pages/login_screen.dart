@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
 import '../services/auth_service.dart';
-import 'onboarding_screen.dart';
+import '../services/onboarding_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginScreen extends StatelessWidget {

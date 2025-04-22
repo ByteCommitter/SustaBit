@@ -274,34 +274,78 @@ class _QuestPageState extends State<QuestPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
-          'Quest Suggestions',
-          style: TextStyle(
-            color: AppColors.primary,
-            fontWeight: FontWeight.bold,
-          ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColors.warning.withOpacity(0.7), AppColors.warning],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.warning.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.lightbulb,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Quest Suggestions',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ],
         ),
         content: SizedBox(
           width: double.maxFinite,
+          height: 400,
           child: _personalizedQuests.isEmpty
             ? Center(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.notifications_off,
-                      size: 48,
-                      color: AppColors.textSecondary.withOpacity(0.5),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.notifications_off,
+                        size: 60,
+                        color: Colors.grey.shade400,
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24),
                     Text(
                       'No suggestions available',
-                      style: TextStyle(color: AppColors.textSecondary),
-                    ),
-                    Text(
-                      'Check back later!',
                       style: TextStyle(
-                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Check back later for personalized quests!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
                         color: AppColors.textSecondary,
                       ),
                     ),
@@ -311,67 +355,206 @@ class _QuestPageState extends State<QuestPage> {
             : ListView.builder(
                 shrinkWrap: true,
                 itemCount: _personalizedQuests.length,
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 itemBuilder: (context, index) {
                   final quest = _personalizedQuests[index];
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(12),
-                      leading: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppColors.warning.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.lightbulb,
-                          color: AppColors.warning,
-                          size: 24,
-                        ),
+                  
+                  // Select a theme color based on quest type
+                  Color themeColor = (quest.title.contains('Meditate') || 
+                                   quest.title.contains('breathing'))
+                    ? Colors.blue.shade700 
+                    : (quest.title.contains('screen time'))
+                      ? Colors.purple.shade600
+                      : (quest.title.contains('hydrated') || 
+                         quest.title.contains('water'))
+                        ? Colors.cyan.shade600
+                        : AppColors.primary;
+                  
+                  // Select appropriate icon based on quest content
+                  IconData questIcon = Icons.lightbulb;
+                  if (quest.title.toLowerCase().contains('breathing')) {
+                    questIcon = Icons.self_improvement;
+                  } else if (quest.title.toLowerCase().contains('screen time')) {
+                    questIcon = Icons.devices;
+                  } else if (quest.title.toLowerCase().contains('hydrated')) {
+                    questIcon = Icons.water_drop;
+                  }
+                  
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: LinearGradient(
+                        colors: [
+                          themeColor.withOpacity(0.05),
+                          Colors.white,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      title: Text(
-                        quest.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      border: Border.all(
+                        color: themeColor.withOpacity(0.3),
+                        width: 1.5,
                       ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(quest.description),
-                          const SizedBox(height: 8),
-                          Text(
-                            "${quest.points} points",
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.bold,
+                      boxShadow: [
+                        BoxShadow(
+                          color: themeColor.withOpacity(0.1),
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Quest Icon with animated container
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      themeColor.withOpacity(0.7),
+                                      themeColor,
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: themeColor.withOpacity(0.2),
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  questIcon,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              
+                              // Quest details
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      quest.title,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: themeColor,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      quest.description,
+                                      style: TextStyle(
+                                        color: AppColors.textPrimary,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            themeColor.withOpacity(0.6),
+                                            themeColor,
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.bolt,
+                                            color: Colors.white,
+                                            size: 14,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            '${quest.points} points',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        
+                        // Add button section
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(15.5),
+                              bottomRight: Radius.circular(15.5),
                             ),
                           ),
-                        ],
-                      ),
-                      isThreeLine: true,
-                      trailing: IconButton(
-                        onPressed: () {
-                          _addSuggestedQuest(quest);
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.add_circle,
-                          color: AppColors.primary,
+                          padding: const EdgeInsets.all(12),
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              _addSuggestedQuest(quest);
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.add_circle_outline, size: 18),
+                            label: const Text('Add to My Quests'),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: themeColor,
+                              elevation: 0,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                          ),
                         ),
-                        tooltip: 'Add to My Quests',
-                      ),
+                      ],
                     ),
                   );
                 },
               ),
         ),
         actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.white,
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey[200],
+                foregroundColor: AppColors.textSecondary,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: const Text('Close'),
             ),
-            child: const Text('Close'),
           ),
         ],
       ),
@@ -545,93 +728,151 @@ class _QuestPageState extends State<QuestPage> {
 
   // Build a quest card for active quests
   Widget _buildQuestCard(Quest quest, {required Function onVerify, required Function onDelete}) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: quest.isCompleted ? 0 : 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      color: quest.isCompleted ? AppColors.cardBackground : AppColors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    // Select a theme color based on quest type or completion status
+    Color themeColor = quest.isCompleted 
+        ? AppColors.success 
+        : (quest.title.contains('Meditate') || quest.title.contains('Journal') || quest.title.contains('breathing'))
+          ? Colors.blue.shade700 
+          : (quest.title.contains('nature') || quest.title.contains('walk') || quest.title.contains('hydrated'))
+            ? Colors.green.shade600
+            : AppColors.primary;
+            
+    Color backgroundColor = quest.isCompleted
+        ? AppColors.cardBackground
+        : AppColors.white;
+        
+    // Icon selection based on quest content
+    IconData questIcon = Icons.task_alt;
+    if (quest.title.toLowerCase().contains('meditate') || quest.title.toLowerCase().contains('breathing')) {
+      questIcon = Icons.self_improvement;
+    } else if (quest.title.toLowerCase().contains('walk') || quest.title.toLowerCase().contains('nature')) {
+      questIcon = Icons.park;
+    } else if (quest.title.toLowerCase().contains('journal') || quest.title.toLowerCase().contains('write')) {
+      questIcon = Icons.edit_note;
+    } else if (quest.title.toLowerCase().contains('hydrated') || quest.title.toLowerCase().contains('water')) {
+      questIcon = Icons.water_drop;
+    } else if (quest.title.toLowerCase().contains('screen time')) {
+      questIcon = Icons.devices;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: quest.isCompleted ? AppColors.cardBackground : Colors.white,
+          boxShadow: quest.isCompleted
+              ? []
+              : [
+                  BoxShadow(
+                    color: themeColor.withOpacity(0.15),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+          border: Border.all(
+            color: quest.isCompleted
+                ? Colors.grey.shade300
+                : themeColor.withOpacity(0.3),
+            width: 1.5,
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Quest Icon
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryLight.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.task_alt,
-                    color: AppColors.primary,
-                    size: 24,
-                  ),
+            // Top part with icon and title
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: quest.isCompleted
+                    ? Colors.grey.shade50
+                    : themeColor.withOpacity(0.08),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(14.5),
+                  topRight: Radius.circular(14.5),
                 ),
-                const SizedBox(width: 16),
-                
-                // Quest details
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        quest.title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          decoration: quest.isCompleted ? TextDecoration.lineThrough : null,
-                          color: quest.isCompleted ? AppColors.textSecondary : AppColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        quest.description,
-                        style: TextStyle(
-                          color: quest.isCompleted ? AppColors.textSecondary : AppColors.textPrimary,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              '${quest.points} points',
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Quest Icon with solid color (no gradient)
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: themeColor,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: quest.isCompleted
+                          ? []
+                          : [
+                              BoxShadow(
+                                color: themeColor.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
                               ),
-                            ),
+                            ],
+                    ),
+                    child: Icon(
+                      questIcon,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  
+                  // Quest details
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          quest.title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            decoration: quest.isCompleted ? TextDecoration.lineThrough : null,
+                            color: quest.isCompleted ? AppColors.textSecondary : themeColor,
                           ),
-                          
-                          if (quest.isCompleted)
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          quest.description,
+                          style: TextStyle(
+                            color: quest.isCompleted ? AppColors.textSecondary : AppColors.textPrimary,
+                            fontSize: 14,
+                            height: 1.3,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            // Points badge with solid color (no gradient)
                             Container(
-                              margin: const EdgeInsets.only(left: 8),
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                               decoration: BoxDecoration(
-                                color: AppColors.success.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(12),
+                                color: themeColor,
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: quest.isCompleted
+                                    ? []
+                                    : [
+                                        BoxShadow(
+                                          color: themeColor.withOpacity(0.2),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.check, size: 12, color: AppColors.success),
+                                  Icon(
+                                    Icons.bolt,
+                                    color: Colors.white,
+                                    size: 14,
+                                  ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    'Completed',
-                                    style: TextStyle(
-                                      color: AppColors.success,
+                                    '${quest.points} points',
+                                    style: const TextStyle(
+                                      color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 13,
                                     ),
@@ -639,47 +880,101 @@ class _QuestPageState extends State<QuestPage> {
                                 ],
                               ),
                             ),
-                        ],
-                      ),
-                    ],
+                            
+                            // Completed badge (text only version)
+                            if (quest.isCompleted)
+                              Container(
+                                margin: const EdgeInsets.only(left: 12),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.check_circle_outline, 
+                                      size: 14, 
+                                      color: AppColors.success,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Completed',
+                                      style: TextStyle(
+                                        color: AppColors.success,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // Current date or completion date indicator
+                              const Spacer(),
+                              if (quest.isCompleted)
+                                Text(
+                                  'Today',
+                                  style: TextStyle(
+                                    color: AppColors.success,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             
-            const SizedBox(height: 16),
-            const Divider(height: 1),
-            const SizedBox(height: 8),
-            
-            // Action buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // Complete button (renamed from Verify)
-                if (!quest.isCompleted)
-                  TextButton.icon(
-                    onPressed: () => onVerify(),
-                    icon: const Icon(Icons.check_circle, size: 18),
-                    label: const Text('Complete'),
-                    style: TextButton.styleFrom(
-                      foregroundColor: AppColors.success,
-                    ),
-                  )
-                else
-                  const SizedBox.shrink(),
-                  
-                const SizedBox(width: 8),
-                
-                // Delete button
-                TextButton.icon(
-                  onPressed: () => onDelete(),
-                  icon: const Icon(Icons.delete, size: 18),
-                  label: const Text('Delete'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppColors.error,
-                  ),
+            // Action buttons with animated hover effect
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(14.5),
+                  bottomRight: Radius.circular(14.5),
                 ),
-              ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // Complete button (renamed from Verify) - styled like Remove button but with green text
+                  if (!quest.isCompleted)
+                    OutlinedButton.icon(
+                      onPressed: () => onVerify(),
+                      icon: Icon(Icons.check_circle, size: 18, color: AppColors.success),
+                      label: Text('Complete', style: TextStyle(color: AppColors.success)),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.success,
+                        side: BorderSide(color: AppColors.success.withOpacity(0.5)),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    )
+                  else
+                    const SizedBox.shrink(),
+                    
+                  const SizedBox(width: 12),
+                  
+                  // Delete button
+                  OutlinedButton.icon(
+                    onPressed: () => onDelete(),
+                    icon: const Icon(Icons.delete_outline, size: 18),
+                    label: const Text('Remove'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.error,
+                      side: BorderSide(color: AppColors.error.withOpacity(0.5)),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

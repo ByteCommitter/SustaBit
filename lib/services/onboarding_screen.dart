@@ -359,41 +359,47 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.psychology,
-            size: 80,
-            color: AppColors.primary, // Use theme color
+          // Use the Sereine logo
+          Image.asset(
+            'assets/images/Sereine Logo with Brain and Leaf.png',
+            width: 120,
+            height: 120,
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 30),
           Text(
-            'Welcome to R N B',
+            'Welcome to Sereine',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 28,
               fontWeight: FontWeight.bold,
-              color: AppColors.primary, // Use theme color
+              color: AppColors.primary,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
-          const Text(
-            'Let\'s take a quick quiz to understand your goals and preferences. This will help us personalize your experience.',
-            style: TextStyle(fontSize: 16),
+          Text(
+            'Your journey to mental sustainability begins here. Let\'s personalize your experience with a quick questionnaire.',
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColors.textSecondary,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 60),
           ElevatedButton(
             onPressed: _nextPage,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary, // Use theme color
-              foregroundColor: AppColors.white, // Use theme color
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
+              elevation: 3,
+              shadowColor: AppColors.primary.withOpacity(0.3),
             ),
             child: const Text(
-              'Start Quiz',
-              style: TextStyle(fontSize: 16),
+              'Begin Journey',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -622,92 +628,129 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _buildSummaryPage() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: SingleChildScrollView(  // Added SingleChildScrollView to fix overflow
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.check_circle_outline,
-              size: 80,
-              color: Colors.green,
-            ),
-            const SizedBox(height: 30),
-            const Text(
-              'Quiz Completed!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
+            // Use Sereine logo at the top
+            Image.asset(
+              'assets/images/Sereine Logo with Brain and Leaf.png',
+              width: 80,
+              height: 80,
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Thank you for sharing your preferences. We\'ll use this information to personalize your sustainability journey.',
-              style: TextStyle(fontSize: 16),
+            Text(
+              'Journey Ready!',
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary,
+              ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 40),
-            if (_userResponses.isNotEmpty)  // Changed condition to check if responses exist
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Your Responses:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ...List.generate(_userResponses.length, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${index + 1}. ${_userResponses[index]['question']}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
+            const SizedBox(height: 15),
+            Text(
+              'Thank you for sharing your preferences. Your mental sustainability journey with Sereine begins now.',
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            
+            if (_userResponses.isNotEmpty)
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.cardBackground,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      offset: const Offset(0, 3),
+                      blurRadius: 10,
+                    )
+                  ]
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.insights, color: AppColors.primary, size: 20),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Your Profile',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16, top: 4),
-                            child: Text(
-                              _userResponses[index]['answer'],
-                              style: const TextStyle(
-                                color: Colors.deepPurple,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    ...List.generate(_userResponses.length, (index) {
+                      // Skip conditional questions that weren't shown
+                      if (_questions[index].isConditional && 
+                          !_questions[index].showIfCondition!(_userResponses)) {
+                        return const SizedBox.shrink();
+                      }
+                      
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${index + 1}. ${_userResponses[index]['question']}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
                                 fontSize: 14,
+                                color: AppColors.textPrimary,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                ],
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16, top: 4),
+                              child: Text(
+                                _userResponses[index]['answer'],
+                                style: TextStyle(
+                                  color: AppColors.accent,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+                ),
               ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
                 // Navigate directly to the BaseScreen
                 Get.offAll(() => const BaseScreen());
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary, // Use theme color
-                foregroundColor: AppColors.white, // Use theme color
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
+                elevation: 3,
+                shadowColor: AppColors.primary.withOpacity(0.3),
               ),
               child: const Text(
-                'Continue to App',
-                style: TextStyle(fontSize: 16),
+                'Begin Your Journey',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(height: 20),  // Added extra padding at bottom
+            const SizedBox(height: 20),
           ],
         ),
       ),
