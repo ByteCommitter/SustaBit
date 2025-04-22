@@ -280,11 +280,7 @@ class _QuestPageState extends State<QuestPage> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.warning.withOpacity(0.7), AppColors.warning],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: AppColors.warning,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -384,14 +380,7 @@ class _QuestPageState extends State<QuestPage> {
                     margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      gradient: LinearGradient(
-                        colors: [
-                          themeColor.withOpacity(0.05),
-                          Colors.white,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      color: Colors.white,
                       border: Border.all(
                         color: themeColor.withOpacity(0.3),
                         width: 1.5,
@@ -412,18 +401,11 @@ class _QuestPageState extends State<QuestPage> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Quest Icon with animated container
+                              // Quest Icon with solid color (no gradient)
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      themeColor.withOpacity(0.7),
-                                      themeColor,
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
+                                  color: themeColor,
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
                                     BoxShadow(
@@ -466,14 +448,7 @@ class _QuestPageState extends State<QuestPage> {
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                       decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            themeColor.withOpacity(0.6),
-                                            themeColor,
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
+                                        color: themeColor,
                                         borderRadius: BorderRadius.circular(30),
                                       ),
                                       child: Row(
