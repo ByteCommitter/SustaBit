@@ -97,3 +97,21 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# Flutter Launcher Icons configuration
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/Sereine Logo with Brain and Leaf.png"
+  adaptive_icon_background: "#FFFFFF" # white background for adaptive icons
+  adaptive_icon_foreground: "assets/images/Sereine Logo with Brain and Leaf.png"
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/images/Sereine Logo with Brain and Leaf.png"
+  windows:
+    generate: true
+    image_path: "assets/images/Sereine Logo with Brain and Leaf.png"
+  macos:
+    generate: true
+    image_path: "assets/images/Sereine Logo with Brain and Leaf.png"
