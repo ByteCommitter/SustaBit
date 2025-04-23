@@ -102,23 +102,23 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/Sereine Logo with Brain and Leaf.png"
-  # Apply zoom to make logo more prominent (crop outer 20% of the image)
-  image_path_android: "assets/images/Sereine Logo with Brain and Leaf.png"
+  image_path: "assets/images/sereine_logo_icon_only.png"
+  # Apply zoom to make logo more prominent
+  image_path_android: "assets/images/sereine_logo_icon_only.png"
   min_sdk_android: 21
   adaptive_icon_background: "#FFFFFF" # white background for adaptive icons
-  adaptive_icon_foreground: "assets/images/Sereine Logo with Brain and Leaf.png"
-  adaptive_icon_foreground_scale_factor: 0.7  # Scale down to 70% to effectively zoom in by cropping edge
+  adaptive_icon_foreground: "assets/images/sereine_logo_icon_only.png"
+  adaptive_icon_foreground_scale_factor: 0.9  # Scale to 90% to keep icon properly centered
   remove_alpha_ios: true
   web:
     generate: true
-    image_path: "assets/images/Sereine Logo with Brain and Leaf.png"
+    image_path: "assets/images/sereine_logo_icon_only.png"
     background_color: "#FFFFFF"
     theme_color: "#FFFFFF"
   windows:
     generate: true
-    image_path: "assets/images/Sereine Logo with Brain and Leaf.png"
+    image_path: "assets/images/sereine_logo_icon_only.png"
     icon_size: 48 # Windows icon size in pixels
   macos:
     generate: true
-    image_path: "assets/images/Sereine Logo with Brain and Leaf.png"
+    image_path: "assets/images/sereine_logo_icon_only.png"
