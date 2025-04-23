@@ -1467,7 +1467,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
         elevation: 1,
-        color: isUserBanned ? Colors.grey[100] : null,
+        color: isUserBanned ? AppColors.cardBackground : AppColors.white,
         child: Stack(
           children: [
             // Banned overlay if user is banned
@@ -1482,14 +1482,14 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppColors.error.withOpacity(0.1), // Use theme color
+                        color: AppColors.error.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.error.withOpacity(0.3)), // Use theme color
+                        border: Border.all(color: AppColors.error.withOpacity(0.3)),
                       ),
                       child: Text(
                         'USER BANNED',
                         style: TextStyle(
-                          color: AppColors.error, // Use theme color
+                          color: AppColors.error,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                         ),
@@ -1508,11 +1508,11 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundColor: Colors.deepPurple.withOpacity(0.2),
+                        backgroundColor: AppColors.primary.withOpacity(0.2),
                         child: Text(
                           post.username.substring(0, 1).toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.deepPurple,
+                          style: TextStyle(
+                            color: AppColors.primary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -1526,13 +1526,13 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                               isUserBanned ? "${post.username} (banned)" : post.username,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: isUserBanned ? Colors.grey : null,
+                                color: isUserBanned ? AppColors.textSecondary : AppColors.textPrimary,
                               ),
                             ),
                             Text(
                               post.timeAgo,
                               style: TextStyle(
-                                color: Colors.grey[600],
+                                color: AppColors.textSecondary,
                                 fontSize: 12,
                               ),
                             ),
@@ -1542,7 +1542,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                       
                       // Three-dot menu for post actions
                       PopupMenuButton<String>(
-                        icon: const Icon(Icons.more_vert, color: Colors.grey),
+                        icon: Icon(Icons.more_vert, color: AppColors.textSecondary),
                         onSelected: (value) {
                           if (value == 'report') {
                             _reportPost(post);
@@ -1562,13 +1562,13 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                           // Delete option for own posts
                           if (isOwnPost) {
                             items.add(
-                              const PopupMenuItem<String>(
+                              PopupMenuItem<String>(
                                 value: 'delete',
                                 child: Row(
                                   children: [
-                                    Icon(Icons.delete_outline, color: Colors.red, size: 20),
-                                    SizedBox(width: 8),
-                                    Text('Delete my post'),
+                                    Icon(Icons.delete_outline, color: AppColors.error, size: 20),
+                                    const SizedBox(width: 8),
+                                    const Text('Delete my post'),
                                   ],
                                 ),
                               ),
@@ -1580,13 +1580,13 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                             // Only add mod delete if it's not the user's own post
                             if (!isOwnPost) {
                               items.add(
-                                const PopupMenuItem<String>(
+                                PopupMenuItem<String>(
                                   value: 'mod_delete',
                                   child: Row(
                                     children: [
-                                      Icon(Icons.no_accounts, color: Colors.orange, size: 20),
-                                      SizedBox(width: 8),
-                                      Text('Delete as moderator'),
+                                      Icon(Icons.no_accounts, color: AppColors.warning, size: 20),
+                                      const SizedBox(width: 8),
+                                      const Text('Delete as moderator'),
                                     ],
                                   ),
                                 ),
@@ -1597,26 +1597,26 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                             if (!isOwnPost) {
                               if (isUserBanned) {
                                 items.add(
-                                  const PopupMenuItem<String>(
+                                  PopupMenuItem<String>(
                                     value: 'unban_user',
                                     child: Row(
                                       children: [
-                                        Icon(Icons.person_add, color: Colors.green, size: 20),
-                                        SizedBox(width: 8),
-                                        Text('Unban user'),
+                                        Icon(Icons.person_add, color: AppColors.success, size: 20),
+                                        const SizedBox(width: 8),
+                                        const Text('Unban user'),
                                       ],
                                     ),
                                   ),
                                 );
                               } else {
                                 items.add(
-                                  const PopupMenuItem<String>(
+                                  PopupMenuItem<String>(
                                     value: 'ban_user',
                                     child: Row(
                                       children: [
-                                        Icon(Icons.block, color: Colors.red, size: 20),
-                                        SizedBox(width: 8),
-                                        Text('Ban user'),
+                                        Icon(Icons.block, color: AppColors.error, size: 20),
+                                        const SizedBox(width: 8),
+                                        const Text('Ban user'),
                                       ],
                                     ),
                                   ),
@@ -1628,13 +1628,13 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                           // Report option (for posts that aren't yours)
                           if (!isOwnPost) {
                             items.add(
-                              const PopupMenuItem<String>(
+                              PopupMenuItem<String>(
                                 value: 'report',
                                 child: Row(
                                   children: [
-                                    Icon(Icons.flag_outlined, color: Colors.amber, size: 20),
-                                    SizedBox(width: 8),
-                                    Text('Report post'),
+                                    Icon(Icons.flag_outlined, color: AppColors.warning, size: 20),
+                                    const SizedBox(width: 8),
+                                    const Text('Report post'),
                                   ],
                                 ),
                               ),
@@ -1653,7 +1653,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                   Text(
                     isUserBanned ? "[Content removed]" : post.content,
                     style: TextStyle(
-                      color: isUserBanned ? Colors.grey : null,
+                      color: isUserBanned ? AppColors.textSecondary : AppColors.textPrimary,
                     ),
                   ),
                   
@@ -1684,7 +1684,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                             onPressed: () => _handleLike(post.id),
                             icon: Icon(
                               isLiked ? Icons.favorite : Icons.favorite_border,
-                              color: isLiked ? Colors.red : null,
+                              color: isLiked ? AppColors.accent : AppColors.textSecondary,
                             ),
                             constraints: const BoxConstraints(),
                             padding: EdgeInsets.zero,
@@ -1700,8 +1700,10 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                         children: [
                           IconButton(
                             onPressed: () => _openPostThread(post),
-                            icon: const Icon(Icons.comment_outlined),
-                            color: Colors.blue,
+                            icon: Icon(
+                              Icons.comment_outlined,
+                              color: AppColors.info,
+                            ),
                             constraints: const BoxConstraints(),
                             padding: EdgeInsets.zero,
                             iconSize: 20,
@@ -1714,7 +1716,10 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                       // Share
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.share_outlined),
+                        icon: Icon(
+                          Icons.share_outlined,
+                          color: AppColors.textSecondary,
+                        ),
                         constraints: const BoxConstraints(),
                         padding: EdgeInsets.zero,
                         iconSize: 20,
@@ -1725,7 +1730,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
                         onPressed: () => _toggleSavePost(post.id),
                         icon: Icon(
                           isSaved ? Icons.bookmark : Icons.bookmark_border,
-                          color: isSaved ? Colors.deepPurple : null,
+                          color: isSaved ? AppColors.primary : AppColors.textSecondary,
                         ),
                         constraints: const BoxConstraints(),
                         padding: EdgeInsets.zero,
