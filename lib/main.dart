@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
             color: AppColors.divider,
           ),
         ),
-        home: BaseScreen(),//SplashScreen(), // Use splash screen first, then it will navigate to login
+        home:SplashScreen(), // Use splash screen first, then it will navigate to login
         getPages: [
           GetPage(name: '/', page: () => SplashScreen()),
           GetPage(name: '/auth', page: () => AuthWrapper()),
