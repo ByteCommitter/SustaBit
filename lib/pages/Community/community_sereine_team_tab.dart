@@ -283,10 +283,8 @@ class CommunitySeireineTeamTab extends StatelessWidget {
           Get.to(() => SAChatPage(teamMember: member));
         },
         child: Container(
-          width: 65, // Reduced from 80
-          // Reduce height to fix overflow by adding negative bottom margin
-          margin: const EdgeInsets.only(bottom: 34),
-          height: double.infinity,
+          width: 68, // Slightly increased from 65 for better proportions
+          height: double.infinity, // Use maximum available height
           decoration: BoxDecoration(
             color: member.bookColor,
             borderRadius: const BorderRadius.only(
@@ -297,27 +295,56 @@ class CommunitySeireineTeamTab extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 3,
+                color: Colors.black.withOpacity(0.4),
+                blurRadius: 4,
                 offset: const Offset(2, 1),
               ),
             ],
           ),
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
-              color: Colors.black38,
-              width: double.infinity,
-              child: Text(
-                member.name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14, // Reduced from 16
+          child: Stack(
+            children: [
+              // Book spine decoration (horizontal lines)
+              Positioned(
+                top: 20,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 2,
+                  color: Colors.white.withOpacity(0.2),
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
+              Positioned(
+                bottom: 45,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 2,
+                  color: Colors.white.withOpacity(0.2),
+                ),
+              ),
+              
+              // Book title - positioned at bottom with better styling
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
+                  color: Colors.black45,
+                  child: Text(
+                    member.name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
