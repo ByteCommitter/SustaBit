@@ -16,31 +16,115 @@ class CommunitySeireineTeamTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Header section with minimal description
+        // Enhanced header section with modern design
         Container(
-          padding: const EdgeInsets.all(20),
-          color: AppColors.primary.withOpacity(0.1),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.primary.withOpacity(0.15),
+                AppColors.primary.withOpacity(0.05),
+              ],
+            ),
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(24),
+              bottomRight: Radius.circular(24),
+            ),
+          ),
           child: Column(
             children: [
+              // Icon with circular background
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.2),
+                      blurRadius: 10,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.menu_book_rounded,
+                  size: 32,
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Title with enhanced typography
               Text(
                 'The Human Library',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
+                  letterSpacing: 0.5,
+                  shadows: [
+                    Shadow(
+                      color: AppColors.primary.withOpacity(0.3),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
                 ),
                 textAlign: TextAlign.center,
               ),
-              // Minimal description - to be updated later by user
-              const SizedBox(height: 8),
+              
+              const SizedBox(height: 12),
+              
+              // Description with improved styling
               Text(
-                'Click on a book to connect with a peer supporter',
+                'A conversation can change everything.\nConnect with the SA team and have confidential conversations\nReal people. Real stories. Real support.',
                 style: TextStyle(
-                  fontSize: 14,
-                  fontStyle: FontStyle.italic,
-                  color: AppColors.textSecondary,
+                  fontSize: 15,
+                  color: AppColors.textPrimary,
+                  height: 1.4,
                 ),
                 textAlign: TextAlign.center,
+              ),
+              
+              const SizedBox(height: 14),
+              
+              // Instruction with subtle accent
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 4,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.touch_app,
+                      size: 16,
+                      color: AppColors.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Tap a book to connect',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
