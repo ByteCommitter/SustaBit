@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
-import 'community_page.dart';
+import 'package:mentalsustainability/theme/app_colors.dart';
+import 'models/community_models.dart'; // Replace import of community_page.dart with models
 
 class SAChatPage extends StatefulWidget {
   final SATeamMember teamMember;

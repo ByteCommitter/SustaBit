@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
       description: 'Donate your unused clothes to help those in need',
       date: 'May 20, 2023',
       location: 'Community Center',
-      imageUrl: 'assets/images/clothes_donation.jpg',
+      imageUrl: 'assets/images/cloth_donation.jpg',
     ),
     Event(
       id: '2',
@@ -1418,7 +1418,7 @@ class _HomePageState extends State<HomePage> {
     if (title.contains('Blood')) {
       imagePath = 'assets/images/blooddonationdrive.jpg';
     } else if (title.contains('Clothes')) {
-      imagePath = 'assets/images/clothes_donation.jpg';
+      imagePath = 'assets/images/cloth_donation.jpeg';
     } else if (title.contains('Beach')) {
       imagePath = 'assets/images/beach_cleanup.jpg';
     } else {

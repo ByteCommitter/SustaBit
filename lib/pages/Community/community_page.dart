@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mentalsustainability/theme/app_colors.dart'; // Add theme import
+import 'package:mentalsustainability/theme/app_colors.dart';
 import 'sa_library_page.dart';
 import 'post_thread_page.dart';
 import 'sa_chat_page.dart'; 
 import 'package:mentalsustainability/pages/Community/moderator_dashboard.dart';
+
+// Import the new tab files
+import 'community_threads_tab.dart';
+import 'community_sereine_team_tab.dart';
+import 'community_seremate_tab.dart';
+import 'models/community_models.dart';
 
 class CommunityPage extends StatefulWidget {
   final String? prefilledPost;
@@ -193,9 +199,9 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
     super.dispose();
   }
 
-  void _navigateToSALibrary() {
-    Get.to(() => const SALibraryPage());
-  }
+  // void _navigateToSALibrary() {
+  //   Get.to(() => const SALibraryPage());
+  // }
 
   void _handleLike(String postId) {
     // Toggle like status
@@ -225,7 +231,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
         'Thanks for the Love!',
         'Your support means a lot to the community.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.accent.withOpacity(0.1), // Use theme color
+        backgroundColor: AppColors.accent.withOpacity(0.1),
         colorText: Colors.pink[800],
         margin: const EdgeInsets.all(16),
         borderRadius: 8,
@@ -256,1495 +262,6 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
   
   void _openPostThread(CommunityPost post) {
     Get.to(() => PostThreadPage(post: post));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          // Community header with tabs
-          Container(
-            color: AppColors.white, // Use theme color
-            child: Column(
-              children: [
-                // App bar with title and moderator access if applicable
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Community",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      // Moderator dashboard button (only visible for moderators)
-                      if (widget.isModerator)
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            Get.to(() => const ModeratorDashboard());
-                          },
-                          icon: const Icon(Icons.admin_panel_settings),
-                          label: const Text('Mod Panel'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange, // Keep special color for moderator
-                            foregroundColor: AppColors.white, // Use theme color
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                
-                // Tab bar
-                TabBar(
-                  controller: _tabController,
-                  labelColor: AppColors.primary, // Use theme color
-                  unselectedLabelColor: Colors.grey,
-                  indicatorColor: AppColors.primary, // Use theme color
-                  tabs: const [
-                    Tab(text: "Threads"),
-                    Tab(text: "Sereine Team"),
-                    Tab(text: "Seremate"),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          
-          // Tab content
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // Threads Tab
-                _buildThreadsTab(),
-                
-                // Sereine Team Tab
-                _buildSereineTeamTab(),
-                
-                // Seremate Tab
-                _buildSeremateTab(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Build the Threads tab content (current community functionality)
-  Widget _buildThreadsTab() {
-    return Stack(
-      children: [
-        // Main content - Post list
-        ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // Post creation card
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Share with the community',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _postController, // Use the controller
-                      decoration: InputDecoration(
-                        hintText: 'What\'s on your mind?',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                      ),
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Add the new post to the top of the list
-                          if (_postController.text.isNotEmpty) {
-                            setState(() {
-                              _posts.insert(0, CommunityPost(
-                                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                                username: 'You',
-                                content: _postController.text,
-                                timeAgo: 'Just now',
-                                likesCount: 0,
-                                commentsCount: 0,
-                                comments: [],
-                              ));
-                              _postController.clear();
-                            });
-                          }
-                          
-                          Get.snackbar(
-                            'Success',
-                            'Your post has been shared with the community!',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: AppColors.success.withOpacity(0.1), // Use theme color
-                            colorText: AppColors.success, // Use theme color
-                            margin: const EdgeInsets.all(16),
-                            borderRadius: 8,
-                            duration: const Duration(seconds: 3),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary, // Use theme color
-                          foregroundColor: AppColors.white, // Use theme color
-                        ),
-                        child: const Text('Post'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            
-            const SizedBox(height: 20),
-            
-            // Community posts
-            ..._posts.map((post) => _buildPostCard(post)),
-            
-            // Bottom padding
-            const SizedBox(height: 20),
-          ],
-        ),
-      ],
-    );
-  }
-
-  // Build the Sereine Team tab content (SA Team connection)
-  Widget _buildSereineTeamTab() {
-    return Column(
-      children: [
-        // Header section with minimal description
-        Container(
-          padding: const EdgeInsets.all(20),
-          color: AppColors.primary.withOpacity(0.1), // Use theme color
-          child: Column(
-            children: [
-              Text(
-                'The Human Library',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary, // Use theme color
-                ),
-                textAlign: TextAlign.center,
-              ),
-              // Minimal description - to be updated later by user
-              SizedBox(height: 8),
-              Text(
-                'Click on a book to connect with a peer supporter',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontStyle: FontStyle.italic,
-                  color: AppColors.textSecondary, // Use theme color
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-
-        // Bookshelf with background and columns
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-            child: Container(
-              decoration: BoxDecoration(
-                // Bookshelf background
-                borderRadius: BorderRadius.circular(16),
-                image: DecorationImage(
-                  image: const AssetImage('assets/images/wood_texture.png'),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.brown.shade700.withOpacity(0.8), 
-                    BlendMode.multiply
-                  ),
-                ),
-              ),
-              child: Column(
-                children: [
-                  // Row 1 of bookshelf
-                  _buildBookshelfRow(
-                    [_saTeamMembers[0], _saTeamMembers[1], _saTeamMembers[2]],
-                    Colors.brown.shade800,
-                  ),
-                  
-                  // Row 2 of bookshelf
-                  _buildBookshelfRow(
-                    [_saTeamMembers[3], _saTeamMembers[4], _saTeamMembers[5]],
-                    Colors.brown.shade700,
-                  ),
-                  
-                  // Row 3 of bookshelf
-                  _buildBookshelfRow(
-                    [_saTeamMembers[6], _saTeamMembers[7], _saTeamMembers[8]],
-                    Colors.brown.shade600,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-  
-  // Helper method to build a row of the bookshelf
-  Widget _buildBookshelfRow(List<SATeamMember> rowMembers, Color shelfColor) {
-    return Expanded(
-      child: Column(
-        children: [
-          // Books container
-          Expanded(
-            flex: 5,
-            child: Row(
-              children: [
-                // Left decorative column - narrower
-                _buildBookshelfColumn(15),
-                
-                // Books section with proper spacing
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: rowMembers.map((member) => _buildBook(member)).toList(),
-                    ),
-                  ),
-                ),
-                
-                // Right decorative column - narrower
-                _buildBookshelfColumn(15),
-              ],
-            ),
-          ),
-          
-          // Shelf
-          Container(
-            height: 12,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              color: shelfColor,
-              borderRadius: BorderRadius.circular(2),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 2,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-          ),
-          
-          // Space below shelf
-          const SizedBox(height: 8),
-        ],
-      ),
-    );
-  }
-  
-  // Helper method to build decorative column with customizable width
-  Widget _buildBookshelfColumn(double width) {
-    return Container(
-      width: width,
-      decoration: BoxDecoration(
-        color: Colors.brown.shade900,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-    );
-  }
-  
-  // Helper method to build an individual book with horizontal text
-  Widget _buildBook(SATeamMember member) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-      child: GestureDetector(
-        onTap: () {
-          // Navigate to chat with this team member
-          Get.to(() => SAChatPage(teamMember: member));
-        },
-        child: Container(
-          width: 65, // Reduced from 80
-          // Reduce height to fix overflow by adding negative bottom margin
-          margin: const EdgeInsets.only(bottom: 34),
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: member.bookColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(2),
-              topRight: Radius.circular(6),
-              bottomLeft: Radius.circular(2),
-              bottomRight: Radius.circular(2),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 3,
-                offset: const Offset(2, 1),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
-              color: Colors.black38,
-              width: double.infinity,
-              child: Text(
-                member.name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14, // Reduced from 16
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Build the Seremate tab content (student connections)
-  Widget _buildSeremateTab() {
-  return ListView(
-    padding: const EdgeInsets.all(16),
-    children: [
-      // Header with info button
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "Connect with Fellow Students",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary, // Use theme color
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.info_outline, color: AppColors.primary), // Use theme color
-            onPressed: () => _showSeremateInfoDialog(context),
-            tooltip: "About Seremate",
-          ),
-        ],
-      ),
-      const SizedBox(height: 16),
-      
-      // Activity-based connection options
-      const Text(
-        "How would you like to connect?",
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: 16),
-      
-      // Grid of activity cards
-      GridView.count(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        crossAxisCount: 2,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 0.85,
-        children: [
-          _buildActivityCard(
-            "Let's Chat",
-            "Have a casual conversation about anything",
-            Icons.chat_bubble_outline,
-            Colors.blue,
-          ),
-          _buildActivityCard(
-            "Go for a Walk",
-            "Find a walking buddy around campus",
-            Icons.directions_walk,
-            Colors.green,
-          ),
-          _buildActivityCard(
-            "Meal Together",
-            "Share a meal at the cafeteria or nearby",
-            Icons.restaurant,
-            Colors.orange,
-          ),
-          _buildActivityCard(
-            "Study Session",
-            "Find someone to study with in the library",
-            Icons.book,
-            Colors.purple,
-          ),
-        ],
-      ),
-      
-      const SizedBox(height: 24),
-      
-      // Active Seremates - modified to show ongoing connections
-      const Text(
-        "Your Active Connections",
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: 12),
-      
-      // Sample connection in progress
-      Card(
-        margin: const EdgeInsets.only(bottom: 12),
-        elevation: 1,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.teal.withOpacity(0.2),
-                    child: const Text(
-                      "A",
-                      style: TextStyle(
-                        color: Colors.teal,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          "Studying: Computer Science",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.circle, size: 8, color: Colors.green[700]),
-                        const SizedBox(width: 4),
-                        Text(
-                          "Online",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.green[700],
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Icon(Icons.restaurant, size: 16, color: Colors.orange[700]),
-                  const SizedBox(width: 8),
-                  const Text(
-                    "Lunch at University Cafeteria",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Icon(Icons.calendar_today, size: 16, color: Colors.blue[700]),
-                  const SizedBox(width: 8),
-                  const Text(
-                    "Today at 1:00 PM",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  OutlinedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.chat_bubble_outline, size: 16),
-                    label: const Text("Chat"),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.deepPurple,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      Get.snackbar(
-                        'Meeting Confirmed',
-                        'Your meetup has been confirmed. Enjoy!',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.green[100],
-                        colorText: Colors.green[800],
-                        margin: const EdgeInsets.all(16),
-                        borderRadius: 8,
-                        duration: const Duration(seconds: 3),
-                      );
-                    },
-                    icon: const Icon(Icons.check_circle, size: 16),
-                    label: const Text("Confirm Meeting"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      foregroundColor: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      
-      // Placeholder for when no active connections
-      Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Icon(Icons.people_outline, size: 48, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            const Text(
-              "No other active connections",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              "Try joining an activity to meet more students",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
-      
-      const SizedBox(height: 24),
-      
-      // User preferences section - MOVED HERE as requested
-      Card(
-        elevation: 1,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Your Connection Preferences",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              
-              // Available times
-              const Text(
-                "I'm usually available:",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  _buildTimeChip("Mornings", false),
-                  _buildTimeChip("Afternoons", true),
-                  _buildTimeChip("Evenings", true),
-                  _buildTimeChip("Weekends", true),
-                ],
-              ),
-              
-              const SizedBox(height: 16),
-              
-              // Conversation topics
-              const Text(
-                "Topics I enjoy discussing:",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  _buildInterestChip("Movies & TV", Colors.indigo),
-                  _buildInterestChip("Music", Colors.pink),
-                  _buildInterestChip("Sports", Colors.amber),
-                  _buildInterestChip("Technology", Colors.blue),
-                  _buildInterestChip("Art", Colors.teal),
-                  _buildInterestChip("+ Add more", Colors.grey),
-                ],
-              ),
-              
-              const SizedBox(height: 16),
-              
-              // Update preferences button
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.snackbar(
-                      'Preferences Updated',
-                      'Your connection preferences have been saved',
-                      snackPosition: SnackPosition.BOTTOM,
-                      backgroundColor: Colors.green[100],
-                      colorText: Colors.green[800],
-                      margin: const EdgeInsets.all(16),
-                      borderRadius: 8,
-                      duration: const Duration(seconds: 2),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary, // Use theme color
-                    foregroundColor: AppColors.white, // Use theme color
-                  ),
-                  child: const Text('Update Preferences'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      
-      const SizedBox(height: 24),
-      
-      // Safety tips footer with added report button
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.05),
-          border: Border.all(color: Colors.blue.withOpacity(0.2)),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.shield, color: Colors.blue[700], size: 20),
-                    const SizedBox(width: 8),
-                    const Text(
-                      "Safety Tips",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ],
-                ),
-                // ADDED Report button
-                TextButton.icon(
-                  onPressed: () {
-                    Get.snackbar(
-                      'Report Concern',
-                      'Thank you for helping keep our community safe. We\'ll review your report promptly.',
-                      snackPosition: SnackPosition.BOTTOM,
-                      backgroundColor: Colors.red[100],
-                      colorText: Colors.red[800],
-                      margin: const EdgeInsets.all(16),
-                      borderRadius: 8,
-                      duration: const Duration(seconds: 3),
-                    );
-                  },
-                  icon: const Icon(Icons.flag, size: 16),
-                  label: const Text("Report Concern"),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.red[700],
-                    backgroundColor: Colors.red[50],
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    textStyle: const TextStyle(fontSize: 12),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              "• Always meet in public, campus locations during daytime",
-              style: TextStyle(fontSize: 13),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              "• Share your meetup details with a trusted friend",
-              style: TextStyle(fontSize: 13),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              "• Report any concerns through the app immediately",
-              style: TextStyle(fontSize: 13),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
-
-  // Show information dialog about Seremate
-  void _showSeremateInfoDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title
-                Text(
-                  "Finding connection in a sea of people",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary, // Use theme color
-                  ),
-                ),
-                const SizedBox(height: 16),
-                
-                // Description
-                const Text(
-                  "Many students feel lonely despite being surrounded by others. Seremate helps you connect anonymously with fellow students for walks, meals, study sessions, or just conversations.",
-                  style: TextStyle(fontSize: 16),
-                ),
-                const SizedBox(height: 16),
-                
-                // Benefits
-                Row(
-                  children: [
-                    Icon(Icons.check_circle, 
-                      size: 16, 
-                      color: Colors.green[700]
-                    ),
-                    const SizedBox(width: 8),
-                    const Expanded(
-                      child: Text(
-                        "Start anonymously, share contact info only when comfortable",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.check_circle, 
-                      size: 16, 
-                      color: Colors.green[700]
-                    ),
-                    const SizedBox(width: 8),
-                    const Expanded(
-                      child: Text(
-                        "Connect based on activities and shared interests",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.check_circle, 
-                      size: 16, 
-                      color: Colors.green[700]
-                    ),
-                    const SizedBox(width: 8),
-                    const Expanded(
-                      child: Text(
-                        "Meet in safe campus locations for peace of mind",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                
-                // Close button
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: TextButton.styleFrom(
-                      foregroundColor: AppColors.primary, // Use theme color
-                    ),
-                    child: const Text("Got it"),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  // Helper method for building activity cards
-  Widget _buildActivityCard(String title, String description, IconData icon, Color color) {
-    return GestureDetector(
-      onTap: () {
-        Get.snackbar(
-          'Looking for Matches',
-          'We\'ll notify you when we find someone for: $title',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: color.withOpacity(0.1),
-          colorText: color,
-          margin: const EdgeInsets.all(16),
-          borderRadius: 8,
-          duration: const Duration(seconds: 3),
-        );
-      },
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: color, size: 32),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                description,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textSecondary, // Use theme color
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Helper method for building time preference chips
-  Widget _buildTimeChip(String label, bool isSelected) {
-    return FilterChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (_) {},
-      backgroundColor: Colors.grey[100],
-      selectedColor: AppColors.primary.withOpacity(0.15), // Use theme color
-      checkmarkColor: AppColors.primary, // Use theme color
-      labelStyle: TextStyle(
-        color: isSelected ? AppColors.primary : Colors.grey[800], // Use theme color
-        fontSize: 12,
-      ),
-    );
-  }
-
-  // Helper method for building interest chips
-  Widget _buildInterestChip(String label, Color color) {
-    return Chip(
-      label: Text(label),
-      labelStyle: const TextStyle(color: Colors.white, fontSize: 12),
-      backgroundColor: color,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-    );
-  }
-  
-  // Helper method for building team member cards
-  Widget _buildTeamMemberCard(TeamMember member) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            // Profile image
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.deepPurple.withOpacity(0.2),
-              child: Text(
-                member.name.substring(0, 1),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            
-            // Member details
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    member.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    member.role,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    member.specialty,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            
-            // Contact button
-            IconButton(
-              onPressed: () {
-                Get.snackbar(
-                  'Connecting',
-                  'Opening chat with ${member.name}...',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.green[100],
-                  colorText: Colors.green[800],
-                  margin: const EdgeInsets.all(16),
-                  borderRadius: 8,
-                  duration: const Duration(seconds: 3),
-                );
-              },
-              icon: const Icon(Icons.chat_bubble_outline),
-              color: Colors.deepPurple,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Helper method for building library category sections
-  Widget _buildLibraryCategory({
-    required String title,
-    required IconData icon,
-    required Color color,
-    required List<ResourceItem> resources,
-  }) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 20),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Category header
-            Row(
-              children: [
-                Icon(icon, color: color, size: 24),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const Divider(height: 24),
-            
-            // Resource items
-            ...resources.map((resource) => _buildResourceItem(resource, color)),
-          ],
-        ),
-      ),
-    );
-  }
-  
-  // Helper method for building individual resource items
-  Widget _buildResourceItem(ResourceItem resource, Color categoryColor) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Resource type icon
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: categoryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              _getResourceTypeIcon(resource.type),
-              color: categoryColor,
-              size: 18,
-            ),
-          ),
-          const SizedBox(width: 12),
-          
-          // Resource details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  resource.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  resource.description,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[800],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: categoryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        resource.type,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: categoryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Icon(Icons.access_time, size: 12, color: Colors.grey[600]),
-                    const SizedBox(width: 4),
-                    Text(
-                      resource.duration,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          
-          // Access button
-          IconButton(
-            onPressed: () {
-              // Access the resource
-              Get.snackbar(
-                'Opening Resource',
-                'Loading ${resource.title}...',
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: Colors.blue[100],
-                colorText: Colors.blue[800],
-                margin: const EdgeInsets.all(16),
-                borderRadius: 8,
-                duration: const Duration(seconds: 2),
-              );
-            },
-            icon: const Icon(Icons.arrow_forward_ios, size: 16),
-            constraints: const BoxConstraints(),
-            padding: EdgeInsets.zero,
-          ),
-        ],
-      ),
-    );
-  }
-  
-  // Helper method to get appropriate icon for resource type
-  IconData _getResourceTypeIcon(String type) {
-    switch (type) {
-      case 'Guide': return Icons.menu_book;
-      case 'Article': return Icons.article;
-      case 'Audio': return Icons.headphones;
-      case 'Video': return Icons.video_library;
-      case 'Workshop': return Icons.build;
-      case 'Info': return Icons.info;
-      default: return Icons.description;
-    }
-  }
-
-  Widget _buildPostCard(CommunityPost post) {
-    final bool isLiked = _likedPosts[post.id] ?? false;
-    final bool isSaved = _savedPosts[post.id] ?? false;
-    final bool isOwnPost = post.username == currentUser;
-    final bool isUserBanned = _bannedUsers.contains(post.username);
-    
-    return GestureDetector(
-      onTap: () => _openPostThread(post),
-      child: Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        elevation: 1,
-        color: isUserBanned ? AppColors.cardBackground : AppColors.white,
-        child: Stack(
-          children: [
-            // Banned overlay if user is banned
-            if (isUserBanned && widget.isModerator)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.03),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.error.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.error.withOpacity(0.3)),
-                      ),
-                      child: Text(
-                        'USER BANNED',
-                        style: TextStyle(
-                          color: AppColors.error,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Post header with three-dots menu
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: AppColors.primary.withOpacity(0.2),
-                        child: Text(
-                          post.username.substring(0, 1).toUpperCase(),
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              isUserBanned ? "${post.username} (banned)" : post.username,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: isUserBanned ? AppColors.textSecondary : AppColors.textPrimary,
-                              ),
-                            ),
-                            Text(
-                              post.timeAgo,
-                              style: TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      
-                      // Three-dot menu for post actions
-                      PopupMenuButton<String>(
-                        icon: Icon(Icons.more_vert, color: AppColors.textSecondary),
-                        onSelected: (value) {
-                          if (value == 'report') {
-                            _reportPost(post);
-                          } else if (value == 'delete') {
-                            _deletePost(post);
-                          } else if (value == 'mod_delete') {
-                            _deletePostAsModerator(post);
-                          } else if (value == 'ban_user') {
-                            _banUser(post.username);
-                          } else if (value == 'unban_user') {
-                            _unbanUser(post.username);
-                          }
-                        },
-                        itemBuilder: (context) {
-                          List<PopupMenuItem<String>> items = [];
-                          
-                          // Delete option for own posts
-                          if (isOwnPost) {
-                            items.add(
-                              PopupMenuItem<String>(
-                                value: 'delete',
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.delete_outline, color: AppColors.error, size: 20),
-                                    const SizedBox(width: 8),
-                                    const Text('Delete my post'),
-                                  ],
-                                ),
-                              ),
-                            );
-                          } 
-                          
-                          // Additional moderator actions
-                          if (widget.isModerator) {
-                            // Only add mod delete if it's not the user's own post
-                            if (!isOwnPost) {
-                              items.add(
-                                PopupMenuItem<String>(
-                                  value: 'mod_delete',
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.no_accounts, color: AppColors.warning, size: 20),
-                                      const SizedBox(width: 8),
-                                      const Text('Delete as moderator'),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-                            
-                            // Ban/Unban user option
-                            if (!isOwnPost) {
-                              if (isUserBanned) {
-                                items.add(
-                                  PopupMenuItem<String>(
-                                    value: 'unban_user',
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.person_add, color: AppColors.success, size: 20),
-                                        const SizedBox(width: 8),
-                                        const Text('Unban user'),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                items.add(
-                                  PopupMenuItem<String>(
-                                    value: 'ban_user',
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.block, color: AppColors.error, size: 20),
-                                        const SizedBox(width: 8),
-                                        const Text('Ban user'),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }
-                            }
-                          }
-                          
-                          // Report option (for posts that aren't yours)
-                          if (!isOwnPost) {
-                            items.add(
-                              PopupMenuItem<String>(
-                                value: 'report',
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.flag_outlined, color: AppColors.warning, size: 20),
-                                    const SizedBox(width: 8),
-                                    const Text('Report post'),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }
-                          
-                          return items;
-                        },
-                      ),
-                    ],
-                  ),
-                  
-                  const SizedBox(height: 12),
-                  
-                  // Post content
-                  Text(
-                    isUserBanned ? "[Content removed]" : post.content,
-                    style: TextStyle(
-                      color: isUserBanned ? AppColors.textSecondary : AppColors.textPrimary,
-                    ),
-                  ),
-                  
-                  // Post image (if available)
-                  if (post.imageUrl != null)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          post.imageUrl!,
-                          width: double.infinity,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 12),
-                  
-                  // Post actions with hearts and save
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Heart/Like button
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () => _handleLike(post.id),
-                            icon: Icon(
-                              isLiked ? Icons.favorite : Icons.favorite_border,
-                              color: isLiked ? AppColors.accent : AppColors.textSecondary,
-                            ),
-                            constraints: const BoxConstraints(),
-                            padding: EdgeInsets.zero,
-                            iconSize: 20,
-                          ),
-                          const SizedBox(width: 4),
-                          Text('${post.likesCount}'),
-                        ],
-                      ),
-                      
-                      // Comments
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () => _openPostThread(post),
-                            icon: Icon(
-                              Icons.comment_outlined,
-                              color: AppColors.info,
-                            ),
-                            constraints: const BoxConstraints(),
-                            padding: EdgeInsets.zero,
-                            iconSize: 20,
-                          ),
-                          const SizedBox(width: 4),
-                          Text('${post.commentsCount}'),
-                        ],
-                      ),
-                      
-                      // Share
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.share_outlined,
-                          color: AppColors.textSecondary,
-                        ),
-                        constraints: const BoxConstraints(),
-                        padding: EdgeInsets.zero,
-                        iconSize: 20,
-                      ),
-                      
-                      // Save post
-                      IconButton(
-                        onPressed: () => _toggleSavePost(post.id),
-                        icon: Icon(
-                          isSaved ? Icons.bookmark : Icons.bookmark_border,
-                          color: isSaved ? AppColors.primary : AppColors.textSecondary,
-                        ),
-                        constraints: const BoxConstraints(),
-                        padding: EdgeInsets.zero,
-                        iconSize: 20,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
   
   // New method to delete your own post
@@ -1779,7 +296,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
               );
             },
             style: TextButton.styleFrom(
-              foregroundColor: AppColors.error, // Use theme color
+              foregroundColor: AppColors.error,
             ),
             child: const Text('DELETE'),
           ),
@@ -1967,8 +484,8 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
           'Report submitted',
           'Thank you for helping keep our community safe. We\'ll review this post.',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: AppColors.info.withOpacity(0.1), // Use theme color
-          colorText: AppColors.info, // Use theme color
+          backgroundColor: AppColors.info.withOpacity(0.1),
+          colorText: AppColors.info,
           margin: const EdgeInsets.all(16),
           borderRadius: 8,
           duration: const Duration(seconds: 3),
@@ -1978,7 +495,7 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
-            Icon(Icons.radio_button_unchecked, size: 18, color: AppColors.primary), // Use theme color
+            Icon(Icons.radio_button_unchecked, size: 18, color: AppColors.primary),
             const SizedBox(width: 12),
             Text(reason),
           ],
@@ -1986,135 +503,137 @@ class _CommunityPageState extends State<CommunityPage> with SingleTickerProvider
       ),
     );
   }
-}
 
-class CommunityPost {
-  final String id;
-  final String username;
-  final String content;
-  final String timeAgo;
-  final int likesCount;
-  final int commentsCount;
-  final String? imageUrl;
-  final List<Comment> comments;
+  // Add a new method to handle posting
+  void _handlePost(String content) {
+    if (content.isNotEmpty) {
+      setState(() {
+        _posts.insert(0, CommunityPost(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          username: 'You',
+          content: content,
+          timeAgo: 'Just now',
+          likesCount: 0,
+          commentsCount: 0,
+          comments: [],
+        ));
+        _postController.clear();
+      });
+      
+      // Show success message
+      Get.snackbar(
+        'Success',
+        'Your post has been shared with the community!',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.success.withOpacity(0.1),
+        colorText: AppColors.success,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 8,
+        duration: const Duration(seconds: 3),
+      );
+    }
+  }
 
-  CommunityPost({
-    required this.id,
-    required this.username,
-    required this.content,
-    required this.timeAgo,
-    this.likesCount = 0,
-    required this.commentsCount,
-    this.imageUrl,
-    this.comments = const [],
-  });
-
-  // Add copyWith method for updating post properties
-  CommunityPost copyWith({
-    String? id,
-    String? username,
-    String? content,
-    String? timeAgo,
-    int? likesCount,
-    int? commentsCount,
-    String? imageUrl,
-    List<Comment>? comments,
-  }) {
-    return CommunityPost(
-      id: id ?? this.id,
-      username: username ?? this.username,
-      content: content ?? this.content,
-      timeAgo: timeAgo ?? this.timeAgo,
-      likesCount: likesCount ?? this.likesCount,
-      commentsCount: commentsCount ?? this.commentsCount,
-      imageUrl: imageUrl ?? this.imageUrl,
-      comments: comments ?? this.comments,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          // Community header with tabs
+          Container(
+            color: AppColors.white,
+            child: Column(
+              children: [
+                // App bar with title and moderator access if applicable
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Community",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      // Moderator dashboard button (only visible for moderators)
+                      if (widget.isModerator)
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Get.to(() => const ModeratorDashboard());
+                          },
+                          icon: const Icon(Icons.admin_panel_settings),
+                          label: const Text('Mod Panel'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            foregroundColor: AppColors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                
+                // Tab bar
+                TabBar(
+                  controller: _tabController,
+                  labelColor: AppColors.primary,
+                  unselectedLabelColor: Colors.grey,
+                  indicatorColor: AppColors.primary,
+                  tabs: const [
+                    Tab(text: "Threads"),
+                    Tab(text: "Sereine Team"),
+                    Tab(text: "Seremate"),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          
+          // Tab content - Using the separate tab files
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // Threads Tab
+                CommunityThreadsTab(
+                  postController: _postController,
+                  likedPosts: _likedPosts,
+                  savedPosts: _savedPosts,
+                  posts: _posts,
+                  currentUser: currentUser,
+                  bannedUsers: _bannedUsers,
+                  isModerator: widget.isModerator,
+                  handleLike: _handleLike,
+                  toggleSavePost: _toggleSavePost,
+                  openPostThread: _openPostThread,
+                  deletePost: _deletePost,
+                  deletePostAsModerator: _deletePostAsModerator,
+                  banUser: _banUser,
+                  unbanUser: _unbanUser,
+                  reportPost: _reportPost,
+                  handlePost: _handlePost, // Add this parameter
+                ),
+                
+                // Sereine Team Tab
+                CommunitySeireineTeamTab(
+                  saTeamMembers: _saTeamMembers,
+                ),
+                
+                // Seremate Tab
+                const CommunitySeremateTab(),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class Comment {
-  final String username;
-  final String content;
-  final String timeAgo;
 
-  Comment({
-    required this.username,
-    required this.content,
-    required this.timeAgo,
-  });
-}
-
-// New class for Sereine Team Members
-class TeamMember {
-  final String name;
-  final String role;
-  final String specialty;
-  final String? imageUrl; // Optional profile image
-
-  TeamMember({
-    required this.name,
-    required this.role,
-    required this.specialty,
-    this.imageUrl,
-  });
-}
-
-// Sample team members data
-final List<TeamMember> sereineTeamMembers = [
-  TeamMember(
-    name: "Dr. Sarah Williams",
-    role: "Mental Health Specialist",
-    specialty: "Specializes in anxiety, stress management, and mindfulness",
-  ),
-  TeamMember(
-    name: "Alex Rodriguez",
-    role: "Sustainability Advisor",
-    specialty: "Expert in sustainable living practices and eco-friendly habits",
-  ),
-  TeamMember(
-    name: "Jamie Chen",
-    role: "Student Support Coordinator",
-    specialty: "Helps with academic challenges and campus resources",
-  ),
-];
-
-// New class for library resources
-class ResourceItem {
-  final String title;
-  final String description;
-  final String type; // Guide, Article, Audio, Video, etc.
-  final String duration;
-  
-  ResourceItem({
-    required this.title,
-    required this.description,
-    required this.type,
-    required this.duration,
-  });
-}
-
-// Adding the SATeamMember class and data to community_page.dart
-// for direct use in the Sereine Team tab
-class SATeamMember {
-  final String id;
-  final String name;
-  final String specialty;
-  final String bio;
-  final Color bookColor;
-  final List<String> presetMessages;
-
-  const SATeamMember({
-    required this.id,
-    required this.name,
-    required this.specialty,
-    required this.bio,
-    required this.bookColor,
-    required this.presetMessages,
-  });
-}
-
-// Team members data - same as in sa_library_page.dart
+// SA Team members data
 final List<SATeamMember> _saTeamMembers = [
   const SATeamMember(
     id: 'sa1',

@@ -141,20 +141,21 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.psychology,
-              color: AppColors.primary,
-              size: 24,
+            Image.asset(
+              'assets/images/sereine_logo.png', // Replace with actual path to your logo
+              width: 75,
+              height: 75,
+              fit: BoxFit.contain,
             ),
-            const SizedBox(width: 8),
-            Text(
-              'Sereine',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
+            // const SizedBox(width: 8),
+            // Text(
+            //   'Sereine',
+            //   style: TextStyle(
+            //     color: AppColors.primary,
+            //     fontWeight: FontWeight.bold,
+            //     fontSize: 20,
+            //   ),
+            // ),
           ],
         ),
         actions: [
